@@ -85,12 +85,41 @@ public class GeneratePlanet : MonoBehaviour {
         return ComputePerlin3D(p * scale + new Vector3(seed * 1.0f, 0, 0)) / 2.0f + 0.5f;
     }
 
+    private float ComputeFBM(Vector3 p, int seed, float H, int numOctaves)
+    {
+        float multiplier = 1.0f;
+        float scale = 1.0f;
+        float result = 0.0f;
+        for (int i=0; i<numOctaves; ++i)
+        {
+            result += (ComputePerlinOctave(p, seed, scale) - 0.5f) * 2.0f * multiplier;
+            scale *= 2.0f;
+            multiplier *= H;
+        }
+        return result / 2.0f + 0.5f;
+    }
+
+    private Color ColorScale(float value, List<Color> palette)
+    {
+        float scaleValue = value * (palette.Count - 1);
+        int idx = Mathf.FloorToInt(scaleValue);
+        float remainder = scaleValue - idx;
+
+        //Debug.Log(value+" "+scaleValue+" "+idx+" "+remainder);
+
+        if (idx == palette.Count - 1) return palette[palette.Count - 1];
+
+        Color color1 = palette[idx];
+        Color color2 = palette[idx + 1];
+        return Color.Lerp(color1, color2, remainder);
+    }
+
 	// Use this for initialization
 	void Start () {
         var startTime = Time.realtimeSinceStartup;
 
-        int width = 512;
-        int height = 512;
+        int width = 64;
+        int height = 64;
         var color = new Texture2D(width, height, TextureFormat.ARGB32, false);
         color.filterMode = FilterMode.Point;
         var normal = new Texture2D(width, height, TextureFormat.ARGB32, false);
@@ -121,10 +150,18 @@ public class GeneratePlanet : MonoBehaviour {
                 var cloud = ComputePerlinOctave(pixelSpaceCoords, 1, scale);
 
                 //var noise = Mathf.PerlinNoise((float)x / 3.0f, (float)y / 3.0f);
-                var noise = ComputePerlinOctave(pixelSpaceCoords, 0, scale);
+                //var noise = ComputePerlinOctave(pixelSpaceCoords, 0, scale);
+                var noise = ComputeFBM(pixelSpaceCoords, 0, 0.5f, 8);
                 //Debug.Log(noise);
                 //color.SetPixel(x, y, noise > 0.5 ? Color.blue : Color.green);
-                if (noise > 0.5)
+                colors[x + width * y] = ColorScale(noise, new List<Color> {
+                    Color.blue,
+                    Color.green,
+                    new Color(0.5f, 0.4f, 0.0f),
+                    new Color(1.0f, 1.0f, 1.0f)
+                });
+                colors[x + width * y].a = 0.9f;
+                /*if (noise > 0.5)
                 {
                     // Water
                     colors[x + width * y] = Color.blue;
@@ -141,7 +178,7 @@ public class GeneratePlanet : MonoBehaviour {
                     albedoLevels[x + width * y].g = 1.0f;
                     albedoLevels[x + width * y].b = 0.0f;
                     albedoLevels[x + width * y].a = 0.2f;
-                }
+                }*/
                 //colors[x + width * y].r = 1.0f;// = Color.white;
                 /*if (cloud > 0.5)
                 {
