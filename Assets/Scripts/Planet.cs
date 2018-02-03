@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 using VRTK;
 
-public class Planet : MonoBehaviour
+public class Planet : NetworkBehaviour
 {
     public int teamId;
 
@@ -17,9 +18,10 @@ public class Planet : MonoBehaviour
 
     public float constructionTime;
     public float shipEffectiveness;
-
-    private int numberOfShips;
     private float constructionCooldown;
+
+    [SyncVar(hook = "OnChangeNumberOfShips")]
+    private int numberOfShips;
 
     // Use this for initialization
     void Start()
@@ -39,7 +41,10 @@ public class Planet : MonoBehaviour
         ((Behaviour)redTeamHalo.GetComponent("Halo")).enabled = false;
         ((Behaviour)blueTeamHalo.GetComponent("Halo")).enabled = false;
 
-        var player = GameObject.Find("Player").GetComponent<Player>();
+        var networkManager = GameObject.Find("NetworkManager");
+        var player = networkManager == null ?
+            GameObject.Find("Player").GetComponent<Player>() :
+            networkManager.GetComponent<MyNetworkManager>().localPlayerObject.GetComponent<Player>();
         if (player.teamId == teamId)
         {
             ((Behaviour)blueTeamHalo.GetComponent("Halo")).enabled = true;
@@ -63,6 +68,11 @@ public class Planet : MonoBehaviour
         tooltipScript.UpdateText(numberOfShips+" ships");
     }
 
+    void OnChangeNumberOfShips(int nships)
+    {
+        UpdateTooltip();
+    }
+
     public GameObject LaunchFleet(GameObject target, int numShips)
     {
         numberOfShips -= numShips;
@@ -80,6 +90,10 @@ public class Planet : MonoBehaviour
         line.SetPosition(0, transform.position);
         line.SetPosition(1, target.transform.position);
         shipObj.GetComponent<Ship>().line = lineObject;
+
+        // Update the network about the new ship
+        NetworkServer.Spawn(shipObj);
+        NetworkServer.Spawn(lineObject);
 
         return shipObj;
     }
@@ -172,7 +186,6 @@ public class Planet : MonoBehaviour
         //selectionManager.selectedUnits.Remove(gameObject);
         //GetComponent<Renderer>().material.color = Color.white;
     }
-
 
     // Update is called once per frame
     protected void Update()

@@ -11,3 +11,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/konquest3d.unity
     guid: 602a3293e8a819c458d1c13d5a2250ad
+  - enabled: 1
+    path: Assets/multiplayer.unity
+    guid: 4cedab76adcd85a48a7e9654280a0a3d

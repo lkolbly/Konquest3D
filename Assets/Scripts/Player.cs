@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class Player : MonoBehaviour {
+public class Player : NetworkBehaviour {
 
     private GameObject sourcePlanet;
 
@@ -52,8 +53,13 @@ public class Player : MonoBehaviour {
         sourcePlanet = null;
     }
 
-	// Use this for initialization
-	void Start () {
+    public override void OnStartLocalPlayer()
+    {
+        GameObject.Find("NetworkManager").GetComponent<MyNetworkManager>().localPlayerObject = gameObject;
+    }
+
+    // Use this for initialization
+    void Start () {
 		
 	}
 	
