@@ -6,6 +6,7 @@ using VRTK;
 
 public class Planet : NetworkBehaviour
 {
+    [SyncVar(hook = "OnSetTeamId")]
     public int teamId;
 
     public GameObject shipPrefab;
@@ -41,10 +42,13 @@ public class Planet : NetworkBehaviour
         ((Behaviour)redTeamHalo.GetComponent("Halo")).enabled = false;
         ((Behaviour)blueTeamHalo.GetComponent("Halo")).enabled = false;
 
-        var networkManager = GameObject.Find("NetworkManager");
+        var networkManager = GameObject.Find("NetworkLobby");
+        var localPlayerObject = networkManager != null ? networkManager.GetComponent<MyNetworkManager>().localPlayerObject : null;
+        if (localPlayerObject == null) return;
         var player = networkManager == null ?
             GameObject.Find("Player").GetComponent<Player>() :
-            networkManager.GetComponent<MyNetworkManager>().localPlayerObject.GetComponent<Player>();
+            localPlayerObject.GetComponent<Player>();
+        Debug.Log(player.teamId + " " + teamId);
         if (player.teamId == teamId)
         {
             ((Behaviour)blueTeamHalo.GetComponent("Halo")).enabled = true;
@@ -69,6 +73,11 @@ public class Planet : NetworkBehaviour
     }
 
     void OnChangeNumberOfShips(int nships)
+    {
+        UpdateTooltip();
+    }
+
+    void OnSetTeamId(int teamId)
     {
         UpdateTooltip();
     }

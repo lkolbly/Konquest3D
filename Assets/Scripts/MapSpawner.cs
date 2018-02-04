@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class MapSpawner : MonoBehaviour {
 
@@ -9,6 +10,7 @@ public class MapSpawner : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         // Instantiate a bunch of planets
+        Debug.Log(Network.isClient + " " + Network.isServer);
         for (var i = 0; i < 10; ++i)
         {
             var planetObject = Instantiate(planetPrefab, Random.insideUnitSphere, Quaternion.identity);
@@ -33,6 +35,8 @@ public class MapSpawner : MonoBehaviour {
                 planet.constructionTime = 5.0f;
                 planet.shipEffectiveness = 0.75f;
             }
+
+            NetworkServer.Spawn(planetObject);
         }
     }
 	

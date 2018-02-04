@@ -8,9 +8,21 @@ public class Player : NetworkBehaviour {
     private GameObject sourcePlanet;
 
     public GameObject shipPrefab;
+
+    [SyncVar(hook = "OnSetTeamId")]
     public int teamId;
 
     private int selectedFleetSize;
+
+    void OnSetTeamId(int teamId)
+    {
+        // Go re-render all planets
+        foreach (var planet in GameObject.FindObjectsOfType<Planet>())
+        {
+            planet.GetComponent<Planet>().UpdateTooltip();
+        }
+
+    }
 
     public void SetSelectedFleetSize(int size)
     {
@@ -55,7 +67,14 @@ public class Player : NetworkBehaviour {
 
     public override void OnStartLocalPlayer()
     {
-        GameObject.Find("NetworkManager").GetComponent<MyNetworkManager>().localPlayerObject = gameObject;
+        Debug.Log("OnStartLocalPlayer() called");
+        GameObject.Find("NetworkLobby").GetComponent<MyNetworkManager>().localPlayerObject = gameObject;
+
+        // Go re-render all planets
+        foreach (var planet in GameObject.FindObjectsOfType<Planet>())
+        {
+            planet.GetComponent<Planet>().UpdateTooltip();
+        }
     }
 
     // Use this for initialization
