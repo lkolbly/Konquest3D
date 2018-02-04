@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class Ship : MonoBehaviour {
+public class Ship : NetworkBehaviour {
 
     public GameObject targetPlanet;
     public GameObject line;
@@ -23,8 +24,21 @@ public class Ship : MonoBehaviour {
         
     }
 
+    [ClientRpc]
+    void RpcDestroyShip()
+    {
+        Destroy(line);
+        Destroy(gameObject);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
+        // We only get called on the server, or in singleplayer
+        if (Network.isClient)
+        {
+            return;
+        }
+
         if (other.gameObject != targetPlanet)
         {
             return;
@@ -37,8 +51,12 @@ public class Ship : MonoBehaviour {
 
             otherPlanet.DoInvasion(teamId, numShips, effectiveness);
 
+            // Destroy on the server
             Destroy(line);
             Destroy(gameObject);
+
+            // Destroy on the clients
+            RpcDestroyShip();
         }
     }
 

@@ -81,8 +81,9 @@ public class Planet : NetworkBehaviour
     {
         UpdateTooltip();
     }
-
-    public GameObject LaunchFleet(GameObject target, int numShips)
+    
+    [Command]
+    public void CmdLaunchFleet(GameObject target, int numShips)
     {
         numberOfShips -= numShips;
         var shipObj = Instantiate(shipPrefab, gameObject.transform.position, Quaternion.FromToRotation(new Vector3(0,0,1), Vector3.Normalize(target.transform.position - transform.position)));
@@ -95,16 +96,14 @@ public class Planet : NetworkBehaviour
 
         // Draw a line going there
         var lineObject = Instantiate(linePrefab);
-        var line = lineObject.GetComponent<LineRenderer>();
-        line.SetPosition(0, transform.position);
-        line.SetPosition(1, target.transform.position);
+        var line = lineObject.GetComponent<LineController>();
+        line.startPosition = transform.position;
+        line.endPosition = target.transform.position;
         shipObj.GetComponent<Ship>().line = lineObject;
 
         // Update the network about the new ship
         NetworkServer.Spawn(shipObj);
         NetworkServer.Spawn(lineObject);
-
-        return shipObj;
     }
 
     public int GetNumberOfShips()

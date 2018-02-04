@@ -49,7 +49,7 @@ public class AiPlayer : MonoBehaviour {
             var planet = planetObj.GetComponent<Planet>();
             if (planet.GetNumberOfShips() > 1)
             {
-                planet.LaunchFleet(neutralPlanets[0], 1);
+                planet.CmdLaunchFleet(neutralPlanets[0], 1);
             }
         }
     }

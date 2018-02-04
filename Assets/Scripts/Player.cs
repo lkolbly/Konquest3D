@@ -47,7 +47,7 @@ public class Player : NetworkBehaviour {
     public void setTarget(GameObject targetPlanet)
     {
         // Create some ships at the source planet headed to the target planet
-        var ships = sourcePlanet.GetComponent<Planet>().LaunchFleet(targetPlanet, selectedFleetSize);
+        sourcePlanet.GetComponent<Planet>().CmdLaunchFleet(targetPlanet, selectedFleetSize);
         selectedFleetSize = 1;
 
         // Unselect the source planet
@@ -74,6 +74,37 @@ public class Player : NetworkBehaviour {
     
     // Update is called once per frame
     void Update () {
-        
+        // Useful for testing multiplayer without multiple players
+        if (Random.value < 0.003 && isLocalPlayer)
+        {
+            // Launch 1 ship from one of out planets to one of theirs
+
+            // Classify all planets: Ours, theirs, and neutral
+            List<GameObject> ourPlanets = new List<GameObject>();
+            List<GameObject> theirPlanets = new List<GameObject>();
+            List<GameObject> neutralPlanets = new List<GameObject>();
+
+            foreach (GameObject planetObj in Object.FindObjectsOfType<GameObject>())
+            {
+                var planet = planetObj.GetComponent<Planet>();
+                if (planet != null)
+                {
+                    if (planet.teamId == teamId)
+                    {
+                        ourPlanets.Add(planetObj);
+                    }
+                    else if (planet.teamId == 0)
+                    {
+                        neutralPlanets.Add(planetObj);
+                    }
+                    else
+                    {
+                        theirPlanets.Add(planetObj);
+                    }
+                }
+            }
+
+            ourPlanets[0].GetComponent<Planet>().CmdLaunchFleet(neutralPlanets[0], 1);
+        }
     }
 }
