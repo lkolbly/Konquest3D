@@ -7,8 +7,8 @@ public class MapSpawner : MonoBehaviour {
 
     public GameObject planetPrefab;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         // Instantiate a bunch of planets
         Debug.Log(Network.isClient + " " + Network.isServer);
         for (var i = 0; i < 10; ++i)
@@ -39,9 +39,9 @@ public class MapSpawner : MonoBehaviour {
             NetworkServer.Spawn(planetObject);
         }
     }
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    
+    // Update is called once per frame
+    void Update () {
+        
+    }
 }

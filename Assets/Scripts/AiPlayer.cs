@@ -6,13 +6,13 @@ public class AiPlayer : MonoBehaviour {
 
     public int teamId;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    // Use this for initialization
+    void Start () {
+        
+    }
+    
+    // Update is called once per frame
+    void Update () {
         // Classify all planets: Ours, theirs, and neutral
         List<GameObject> ourPlanets = new List<GameObject>();
         List<GameObject> theirPlanets = new List<GameObject>();
@@ -49,11 +49,8 @@ public class AiPlayer : MonoBehaviour {
             var planet = planetObj.GetComponent<Planet>();
             if (planet.GetNumberOfShips() > 1)
             {
-                var fleet = planet.LaunchFleet(neutralPlanets[0], 1);
-
-                //fleet.GetComponent<Rigidbody>().velocity = neutralPlanets[0].transform.position - planetObj.transform.position;
-                //fleet.GetComponent<Ship>().targetPlanet = neutralPlanets[0];
+                planet.LaunchFleet(neutralPlanets[0], 1);
             }
         }
-	}
+    }
 }

@@ -9,8 +9,8 @@ public class Controller : MonoBehaviour {
     private int lastSelectedFleetSize;
     public Text touchpadFleetCount;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         GetComponent<VRTK_ControllerEvents>().TouchpadTouchStart += new ControllerInteractionEventHandler(DoTouchpadTouchStart);
         GetComponent<VRTK_ControllerEvents>().TouchpadTouchEnd += new ControllerInteractionEventHandler(DoTouchpadTouchEnd);
         GetComponent<VRTK_ControllerEvents>().TouchpadAxisChanged += new ControllerInteractionEventHandler(DoTouchpadAxisChanged);
@@ -39,9 +39,6 @@ public class Controller : MonoBehaviour {
         Debug.Log(selectedFleetSize);
         if (lastSelectedFleetSize != selectedFleetSize)
         {
-            //var haptics = GetComponent<VRTK_ControllerHaptics>();
-            //VRTK_ControllerReference.GetControllerReference(grabbingObject.controllerEvents.gameObject);
-            //var controllerReference = VRTK_ControllerReference.GetControllerReference(e.controllerReference);
             VRTK_ControllerHaptics.TriggerHapticPulse(e.controllerReference, 0.4f, 0.01f, 0.01f);
             touchpadFleetCount.text = selectedFleetSize.ToString();
         }
@@ -51,6 +48,6 @@ public class Controller : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-		
-	}
+        
+    }
 }

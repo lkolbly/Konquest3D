@@ -184,16 +184,10 @@ public class Planet : NetworkBehaviour
 
     public void StopUsing(object sender, InteractableObjectEventArgs e)
     {
-        //((Behaviour)selectedHalo.GetComponent("Halo")).enabled = false;
-
         DisplayTeamColor();
 
         var player = GameObject.Find("Player").GetComponent<Player>();
         player.setSource(null);
-
-        //var selectionManager = GameObject.Find("SelectionController").GetComponent<SelectionManager>();
-        //selectionManager.selectedUnits.Remove(gameObject);
-        //GetComponent<Renderer>().material.color = Color.white;
     }
 
     // Update is called once per frame

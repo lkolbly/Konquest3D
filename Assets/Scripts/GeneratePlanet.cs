@@ -114,8 +114,8 @@ public class GeneratePlanet : MonoBehaviour {
         return Color.Lerp(color1, color2, remainder);
     }
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         var startTime = Time.realtimeSinceStartup;
 
         int width = 64;
@@ -147,13 +147,7 @@ public class GeneratePlanet : MonoBehaviour {
                     Mathf.Sin(((float)y / height - 0.5f) * 3.14159265f)// * scale
                 );
 
-                var cloud = ComputePerlinOctave(pixelSpaceCoords, 1, scale);
-
-                //var noise = Mathf.PerlinNoise((float)x / 3.0f, (float)y / 3.0f);
-                //var noise = ComputePerlinOctave(pixelSpaceCoords, 0, scale);
                 var noise = ComputeFBM(pixelSpaceCoords, 0, 0.5f, 8);
-                //Debug.Log(noise);
-                //color.SetPixel(x, y, noise > 0.5 ? Color.blue : Color.green);
                 colors[x + width * y] = ColorScale(noise, new List<Color> {
                     Color.blue,
                     Color.green,
@@ -179,23 +173,8 @@ public class GeneratePlanet : MonoBehaviour {
                     albedoLevels[x + width * y].b = 0.0f;
                     albedoLevels[x + width * y].a = 0.2f;
                 }*/
-                //colors[x + width * y].r = 1.0f;// = Color.white;
-                /*if (cloud > 0.5)
-                {
-                    colors[x + width * y].r = 1.0f;
-                    colors[x + width * y].g = 1.0f;
-                    colors[x + width * y].b = 1.0f;
-                    colors[x + width * y].a = 0.0f;
-
-                    albedoLevels[x + width * y].r = 1.0f;
-                    albedoLevels[x + width * y].g = 1.0f;
-                    albedoLevels[x + width * y].b = 1.0f;
-                    albedoLevels[x + width * y].a = 0.0f;
-                }*/
 
                 heightMap[x, y] = noise;
-                //color.SetPixel(x, y, ComputePerlin3D(new Vector3(x/3.0f, y/3.0f, 3.0f)) > 0.0 ? Color.red : Color.green);
-                //color.SetPixel(x, y, x%10 == 0 || y%10 == 0 ? Color.red : Color.green);
             }
         }
 
@@ -235,10 +214,10 @@ public class GeneratePlanet : MonoBehaviour {
 
         var totalTime = Time.realtimeSinceStartup - startTime;
         Debug.Log("Generating planet took "+totalTime+"s");
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    }
+    
+    // Update is called once per frame
+    void Update () {
+        
+    }
 }

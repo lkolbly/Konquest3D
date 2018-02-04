@@ -18,19 +18,13 @@ public class Ship : MonoBehaviour {
         this.effectiveness = effectiveness;
     }
 
-	// Use this for initialization
-	void Start () {
-		
-	}
+    // Use this for initialization
+    void Start () {
+        
+    }
 
     private void OnTriggerEnter(Collider other)
     {
-        /*var damageableComponent = other.gameObject.GetComponent<Damageable>();
-        if (damageableComponent != null)
-        {
-            damageableComponent.DealDamage(1.0f);
-        }*/
-
         if (other.gameObject != targetPlanet)
         {
             return;
@@ -50,6 +44,6 @@ public class Ship : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-		
-	}
+        
+    }
 }

@@ -8,10 +8,10 @@ public class MyNetworkManager : NetworkLobbyManager {
     private int playerCount = 0;
     public GameObject localPlayerObject;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
+    // Use this for initialization
+    void Start () {
+        
+    }
 
     public override GameObject OnLobbyServerCreateGamePlayer(NetworkConnection conn, short playerControllerId)
     {
@@ -24,6 +24,6 @@ public class MyNetworkManager : NetworkLobbyManager {
 
     // Update is called once per frame
     void Update () {
-		
-	}
+        
+    }
 }
