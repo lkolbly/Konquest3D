@@ -81,9 +81,26 @@ public class Planet : NetworkBehaviour
     {
         UpdateTooltip();
     }
-    
+
     [Command]
     public void CmdLaunchFleet(GameObject target, int numShips)
+    {
+        CmdLaunchFleet(target, numShips);
+    }
+
+    public void LaunchFleetDispatch(GameObject target, int numShips)
+    {
+        if (Network.isClient)
+        {
+            CmdLaunchFleet(target, numShips);
+        }
+        else
+        {
+            LaunchFleet(target, numShips);
+        }
+    }
+
+    private void LaunchFleet(GameObject target, int numShips)
     {
         numberOfShips -= numShips;
         var shipObj = Instantiate(shipPrefab, gameObject.transform.position, Quaternion.FromToRotation(new Vector3(0,0,1), Vector3.Normalize(target.transform.position - transform.position)));
@@ -101,9 +118,12 @@ public class Planet : NetworkBehaviour
         line.endPosition = target.transform.position;
         shipObj.GetComponent<Ship>().line = lineObject;
 
-        // Update the network about the new ship
-        NetworkServer.Spawn(shipObj);
-        NetworkServer.Spawn(lineObject);
+        if (Network.isServer) // @TODO: Should this be in CmdLaunchFleet?
+        {
+            // Update the network about the new ship
+            NetworkServer.Spawn(shipObj);
+            NetworkServer.Spawn(lineObject);
+        }
     }
 
     public int GetNumberOfShips()

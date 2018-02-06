@@ -36,7 +36,10 @@ public class MapSpawner : MonoBehaviour {
                 planet.shipEffectiveness = 0.75f;
             }
 
-            NetworkServer.Spawn(planetObject);
+            if (Network.isServer)
+            {
+                NetworkServer.Spawn(planetObject);
+            }
         }
     }
     

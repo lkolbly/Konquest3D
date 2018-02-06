@@ -21,7 +21,7 @@ public class Ship : NetworkBehaviour {
 
     // Use this for initialization
     void Start () {
-        
+        Debug.Log("Ship created");
     }
 
     [ClientRpc]

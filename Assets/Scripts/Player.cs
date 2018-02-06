@@ -104,7 +104,7 @@ public class Player : NetworkBehaviour {
                 }
             }
 
-            ourPlanets[0].GetComponent<Planet>().CmdLaunchFleet(neutralPlanets[0], 1);
+            ourPlanets[0].GetComponent<Planet>().LaunchFleetDispatch(neutralPlanets[0], 1);
         }
     }
 }
