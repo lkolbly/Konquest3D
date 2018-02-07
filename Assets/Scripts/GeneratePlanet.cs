@@ -5,13 +5,14 @@ using UnityEngine;
 public class GeneratePlanet : MonoBehaviour {
 
     public Material material;
+    public int seed;
 
     private List<Vector3> gradientValues;
 
     private float ComputePerlin3D(Vector3 pos)
     {
         var originalRandomState = Random.state;
-        Random.InitState(123456);
+        Random.InitState(seed);
 
         if (gradientValues == null)
         {

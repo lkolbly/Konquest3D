@@ -43,12 +43,13 @@ public class Planet : NetworkBehaviour
         ((Behaviour)blueTeamHalo.GetComponent("Halo")).enabled = false;
 
         var networkManager = GameObject.Find("NetworkLobby");
-        var localPlayerObject = networkManager != null ? networkManager.GetComponent<MyNetworkManager>().localPlayerObject : null;
+        var localPlayerObject = networkManager == null ?
+            GameObject.Find("Player") :
+            networkManager.GetComponent<MyNetworkManager>().localPlayerObject;
+        //Debug.Log(networkManager+" "+localPlayerObject);
         if (localPlayerObject == null) return;
-        var player = networkManager == null ?
-            GameObject.Find("Player").GetComponent<Player>() :
-            localPlayerObject.GetComponent<Player>();
-        Debug.Log(player.teamId + " " + teamId);
+
+        var player = localPlayerObject.GetComponent<Player>();
         if (player.teamId == teamId)
         {
             ((Behaviour)blueTeamHalo.GetComponent("Halo")).enabled = true;
@@ -80,6 +81,7 @@ public class Planet : NetworkBehaviour
     void OnSetTeamId(int teamId)
     {
         UpdateTooltip();
+        DisplayTeamColor();
     }
 
     [Command]
@@ -212,6 +214,7 @@ public class Planet : NetworkBehaviour
     // Update is called once per frame
     protected void Update()
     {
+        DisplayTeamColor();
         constructionCooldown -= Time.deltaTime;
         if (constructionCooldown < 0)
         {

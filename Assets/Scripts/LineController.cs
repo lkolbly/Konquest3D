@@ -13,7 +13,7 @@ public class LineController : NetworkBehaviour {
 
     // Use this for initialization
     void Start () {
-        
+        Update();
     }
     
     // Update is called once per frame

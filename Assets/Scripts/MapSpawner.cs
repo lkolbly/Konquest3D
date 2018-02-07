@@ -36,6 +36,12 @@ public class MapSpawner : MonoBehaviour {
                 planet.shipEffectiveness = 0.75f;
             }
 
+            var planetGenerator = planetObject.GetComponent<GeneratePlanet>();
+            planetGenerator.seed = (int)(Random.value * 100000);
+            Debug.Log("Planet has seed "+planetGenerator.seed);
+
+            planetGenerator.material = planet.GetComponent<Renderer>().materials[0];
+
             if (Network.isServer)
             {
                 NetworkServer.Spawn(planetObject);

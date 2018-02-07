@@ -55,8 +55,11 @@ public class Ship : NetworkBehaviour {
             Destroy(line);
             Destroy(gameObject);
 
-            // Destroy on the clients
-            RpcDestroyShip();
+            if (Network.isServer)
+            {
+                // Destroy on the clients
+                RpcDestroyShip();
+            }
         }
     }
 
