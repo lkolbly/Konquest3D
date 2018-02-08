@@ -9,6 +9,8 @@ public class Planet : NetworkBehaviour
     [SyncVar(hook = "OnSetTeamId")]
     public int teamId;
 
+    public GameObject playerObject;
+
     public GameObject shipPrefab;
     public GameObject linePrefab;
 
@@ -44,7 +46,7 @@ public class Planet : NetworkBehaviour
 
         var networkManager = GameObject.Find("NetworkLobby");
         var localPlayerObject = networkManager == null ?
-            GameObject.Find("Player") :
+            playerObject :
             networkManager.GetComponent<MyNetworkManager>().localPlayerObject;
         //Debug.Log(networkManager+" "+localPlayerObject);
         if (localPlayerObject == null) return;
