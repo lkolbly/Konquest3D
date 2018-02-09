@@ -14,6 +14,8 @@ public class Planet : NetworkBehaviour
     public GameObject shipPrefab;
     public GameObject linePrefab;
 
+    public float shipSpeed;
+
     public GameObject selectedHalo;
     public GameObject redTeamHalo;
     public GameObject blueTeamHalo;
@@ -107,12 +109,14 @@ public class Planet : NetworkBehaviour
     private void LaunchFleet(GameObject target, int numShips)
     {
         numberOfShips -= numShips;
-        var shipObj = Instantiate(shipPrefab, gameObject.transform.position, Quaternion.FromToRotation(new Vector3(0,0,1), Vector3.Normalize(target.transform.position - transform.position)));
+
+        var direction = Vector3.Normalize(target.transform.position - transform.position);
+        var shipObj = Instantiate(shipPrefab, gameObject.transform.position, Quaternion.FromToRotation(new Vector3(0,0,1), direction));
         var fleet = shipObj.GetComponent<Ship>();
         fleet.SetStats(teamId, numShips, shipEffectiveness);
 
         // Send it to the target
-        shipObj.GetComponent<Rigidbody>().velocity = 0.1f * Vector3.Normalize(target.transform.position - transform.position);
+        shipObj.GetComponent<Rigidbody>().velocity = shipSpeed * direction;
         shipObj.GetComponent<Ship>().targetPlanet = target;
 
         // Draw a line going there
@@ -187,7 +191,7 @@ public class Planet : NetworkBehaviour
 
     public void StartUsing(object sender, InteractableObjectEventArgs e)
     {
-        var player = GameObject.Find("Player").GetComponent<Player>();
+        var player = playerObject.GetComponent<Player>();
         if (player.isInSelectTargetMode())
         {
             player.setTarget(gameObject);
@@ -209,7 +213,7 @@ public class Planet : NetworkBehaviour
     {
         DisplayTeamColor();
 
-        var player = GameObject.Find("Player").GetComponent<Player>();
+        var player = playerObject.GetComponent<Player>();
         player.setSource(null);
     }
 

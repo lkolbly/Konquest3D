@@ -8,6 +8,21 @@ public class MapSpawner : MonoBehaviour {
     public GameObject planetPrefab;
     public GameObject playerObject;
 
+    // Returns a value between -1 and 1, peaking at 0.
+    private float triangleDistribution()
+    {
+        while (true)
+        {
+            var x = Random.value;
+            var y = Random.value;
+            if (y < 1.0f - Mathf.Abs(x))
+            {
+                return x;
+            }
+        }
+        return 0.0f;
+    }
+
     // Use this for initialization
     void Start () {
         // Instantiate a bunch of planets
@@ -17,11 +32,8 @@ public class MapSpawner : MonoBehaviour {
             var planetObject = Instantiate(planetPrefab, Random.insideUnitSphere + transform.position, Quaternion.identity);
             var planet = planetObject.GetComponent<Planet>();
 
-            planet.constructionTime = 0.0f;
-            for (var j = 0; j < 10; ++j)
-            {
-                planet.constructionTime += Random.value;
-            }
+            planet.constructionTime = triangleDistribution() * 5.0f + 5.0f;
+            Debug.Log(planet.constructionTime);
 
             planet.shipEffectiveness = (Random.value + Random.value) / 2.0f;
             if (i == 0)
