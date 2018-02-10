@@ -167,7 +167,7 @@ public class Planet : NetworkBehaviour
         while (attackingNumShips > 0 && numberOfShips > 0)
         {
             var attackWinProb = attPower / (attPower + defPower);
-            if (Random.value < attackWinProb)
+            if (Random.value > attackWinProb)
             {
                 attackingNumShips--;
             }
