@@ -8,97 +8,11 @@ public class GeneratePlanet : MonoBehaviour {
 
     public INoiseGenerator noiseSource;
 
-    /*
-    public int seed;
-
-    private List<Vector3> gradientValues;
-
-    private float ComputePerlin3D(Vector3 pos)
-    {
-        var originalRandomState = Random.state;
-        Random.InitState(seed);
-
-        if (gradientValues == null)
-        {
-            gradientValues = new List<Vector3>();
-            for (int i = 0; i < 100; ++i)
-            {
-                gradientValues.Add(Random.onUnitSphere);
-            }
-        }
-
-        int xi = Mathf.FloorToInt(pos.x);
-        int yi = Mathf.FloorToInt(pos.y);
-        int zi = Mathf.FloorToInt(pos.z);
-
-        float x = pos.x - xi;
-        float y = pos.y - yi;
-        float z = pos.z - zi;
-
-        //float runningTotal = 0.0f;
-        float[] dots = new float[8];
-        int cnt = 0;
-        for (int xo = 0; xo <= 1; ++xo)
-        {
-            for (int yo = 0; yo <= 1; ++yo)
-            {
-                for (int zo = 0; zo <= 1; ++zo)
-                {
-                    int coordHash = (xi+xo) * 123 + (yi+yo) * 321 + (zi+zo) * 3;
-                    var gradient = gradientValues[System.Math.Abs(coordHash) % 100];
-                    var corner = new Vector3(xi+xo, yi+yo, zi+zo);
-                    var distanceVector = corner - pos;
-                    var dot = Vector3.Dot(gradient, distanceVector);
-                    //tal += dot * Vector3.Magnitude(distanceVector);
-                    dots[cnt] = dot;
-                    cnt++;
-                }
-            }
-        }
-        
-        var floorValue = Mathf.Lerp(
-            Mathf.Lerp(dots[0], dots[4], x),
-            Mathf.Lerp(dots[2], dots[6], x),
-            y
-        );
-        var ceilingValue = Mathf.Lerp(
-            Mathf.Lerp(dots[1], dots[5], x),
-            Mathf.Lerp(dots[3], dots[7], x),
-            y
-        );
-        var result = Mathf.Lerp(floorValue, ceilingValue, z);
-
-        Random.state = originalRandomState;
-        return result;
-    }
-
-    private float ComputePerlinOctave(Vector3 p, int seed, float scale)
-    {
-        return ComputePerlin3D(p * scale + new Vector3(seed * 1.0f, 0, 0)) / 2.0f + 0.5f;
-    }
-
-    private float ComputeFBM(Vector3 p, int seed, float H, int numOctaves)
-    {
-        float multiplier = 1.0f;
-        float scale = 1.0f;
-        float result = 0.0f;
-        for (int i=0; i<numOctaves; ++i)
-        {
-            result += (ComputePerlinOctave(p, seed, scale) - 0.5f) * 2.0f * multiplier;
-            scale *= 2.0f;
-            multiplier *= H;
-        }
-        return result / 2.0f + 0.5f;
-    }
-*/
-
     private Color ColorScale(float value, List<Color> palette)
     {
         float scaleValue = value * (palette.Count - 1);
         int idx = Mathf.FloorToInt(scaleValue);
         float remainder = scaleValue - idx;
-
-        //Debug.Log(value+" "+scaleValue+" "+idx+" "+remainder);
 
         if (idx == palette.Count - 1) return palette[palette.Count - 1];
 

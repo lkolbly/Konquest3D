@@ -36,8 +36,6 @@ public class Planet : NetworkBehaviour
         Debug.Log("Starting planet!");
         DisplayTeamColor();
 
-        GetComponent<VRTK_InteractableObject>().InteractableObjectUsed += new InteractableObjectEventHandler(StartUsing);
-        GetComponent<VRTK_InteractableObject>().InteractableObjectUnused += new InteractableObjectEventHandler(StopUsing);
         GetComponent<VRTK_InteractableObject>().InteractableObjectTouched += new InteractableObjectEventHandler(StartTouching);
         GetComponent<VRTK_InteractableObject>().InteractableObjectUntouched += new InteractableObjectEventHandler(StopTouching);
 
@@ -193,34 +191,6 @@ public class Planet : NetworkBehaviour
         UpdateTooltip();
     }
 
-    public void StartUsing(object sender, InteractableObjectEventArgs e)
-    {
-        /*var player = playerObject.GetComponent<Player>();
-        if (player.isInSelectTargetMode())
-        {
-            player.setTarget(gameObject);
-        }
-        else
-        {
-            if (player.teamId == teamId)
-            {
-                DisplaySelected();
-                player.setSource(gameObject);
-            }
-        }
-
-        //GetComponent<Renderer>().material.color = Color.red;
-        Debug.Log("Using planet!");*/
-    }
-
-    public void StopUsing(object sender, InteractableObjectEventArgs e)
-    {
-        /*DisplayTeamColor();
-
-        var player = playerObject.GetComponent<Player>();
-        player.setSource(null);*/
-    }
-
     private void StartTouching(object sender, InteractableObjectEventArgs e)
     {
         isBeingTouched = true;
@@ -257,9 +227,6 @@ public class Planet : NetworkBehaviour
                 }
             }
 
-            //GetComponent<Renderer>().material.color = Color.red;
-            Debug.Log("Using planet!");
-
             return true;
         }
         return false;
@@ -268,7 +235,6 @@ public class Planet : NetworkBehaviour
     // Update is called once per frame
     protected void Update()
     {
-        //DisplayTeamColor();
         constructionCooldown -= Time.deltaTime;
         if (constructionCooldown < 0)
         {
