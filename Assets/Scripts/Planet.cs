@@ -28,6 +28,8 @@ public class Planet : NetworkBehaviour
     [SyncVar(hook = "OnChangeNumberOfShips")]
     private int numberOfShips;
 
+    private bool isBeingTouched = false;
+
     // Use this for initialization
     void Start()
     {
@@ -36,6 +38,8 @@ public class Planet : NetworkBehaviour
 
         GetComponent<VRTK_InteractableObject>().InteractableObjectUsed += new InteractableObjectEventHandler(StartUsing);
         GetComponent<VRTK_InteractableObject>().InteractableObjectUnused += new InteractableObjectEventHandler(StopUsing);
+        GetComponent<VRTK_InteractableObject>().InteractableObjectTouched += new InteractableObjectEventHandler(StartTouching);
+        GetComponent<VRTK_InteractableObject>().InteractableObjectUntouched += new InteractableObjectEventHandler(StopTouching);
 
         constructionCooldown = constructionTime;
     }
@@ -157,7 +161,7 @@ public class Planet : NetworkBehaviour
         var attPower = attSizeMultiplier * attackingEffectiveness;
         var defPower = defSizeMultiplier * shipEffectiveness;
 
-        Debug.Log(attPower + " " + defPower);
+        Debug.Log("Being attacked! Stats: "+attackingNumShips+" "+numberOfShips+" "+attackingEffectiveness+" "+shipEffectiveness+" "+attPower + " " + defPower);
 
         // Play the repeatedly-remove-one-from-each-side game
         while (attackingNumShips > 0 && numberOfShips > 0)
@@ -191,7 +195,7 @@ public class Planet : NetworkBehaviour
 
     public void StartUsing(object sender, InteractableObjectEventArgs e)
     {
-        var player = playerObject.GetComponent<Player>();
+        /*var player = playerObject.GetComponent<Player>();
         if (player.isInSelectTargetMode())
         {
             player.setTarget(gameObject);
@@ -206,21 +210,65 @@ public class Planet : NetworkBehaviour
         }
 
         //GetComponent<Renderer>().material.color = Color.red;
-        Debug.Log("Using planet!");
+        Debug.Log("Using planet!");*/
     }
 
     public void StopUsing(object sender, InteractableObjectEventArgs e)
     {
-        DisplayTeamColor();
+        /*DisplayTeamColor();
 
         var player = playerObject.GetComponent<Player>();
-        player.setSource(null);
+        player.setSource(null);*/
+    }
+
+    private void StartTouching(object sender, InteractableObjectEventArgs e)
+    {
+        isBeingTouched = true;
+    }
+
+    private void StopTouching(object sender, InteractableObjectEventArgs e)
+    {
+        isBeingTouched = false;
+    }
+
+    // Returns true if we are successfully selected (isBeingTouched == true), false otherwise
+    public bool TrySelecting()
+    {
+        if (isBeingTouched)
+        {
+            var player = playerObject.GetComponent<Player>();
+            if (player.isInSelectTargetMode())
+            {
+                if (player.getSource() == gameObject)
+                {
+                    // We're just unselecting ourselves
+                    DisplayTeamColor();
+                    player.setSource(null);
+                    return true;
+                }
+                player.setTarget(gameObject);
+            }
+            else
+            {
+                if (player.teamId == teamId)
+                {
+                    DisplaySelected();
+                    player.setSource(gameObject);
+                }
+            }
+
+            //GetComponent<Renderer>().material.color = Color.red;
+            Debug.Log("Using planet!");
+
+            return true;
+        }
+        return false;
     }
 
     // Update is called once per frame
     protected void Update()
     {
-        DisplayTeamColor();
+        //DisplayTeamColor();
         constructionCooldown -= Time.deltaTime;
         if (constructionCooldown < 0)
         {

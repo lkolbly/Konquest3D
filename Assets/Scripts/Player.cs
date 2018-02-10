@@ -47,7 +47,7 @@ public class Player : NetworkBehaviour {
     public void setTarget(GameObject targetPlanet)
     {
         // Create some ships at the source planet headed to the target planet
-        sourcePlanet.GetComponent<Planet>().CmdLaunchFleet(targetPlanet, selectedFleetSize);
+        sourcePlanet.GetComponent<Planet>().LaunchFleetDispatch(targetPlanet, selectedFleetSize);
         selectedFleetSize = 1;
 
         // Unselect the source planet

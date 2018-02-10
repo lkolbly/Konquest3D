@@ -21,7 +21,6 @@ public class Ship : NetworkBehaviour {
 
     // Use this for initialization
     void Start () {
-        Debug.Log("Ship created");
     }
 
     [ClientRpc]
@@ -47,8 +46,6 @@ public class Ship : NetworkBehaviour {
         var otherPlanet = other.gameObject.GetComponent<Planet>();
         if (otherPlanet != null)
         {
-            Debug.Log("Hit planet");
-
             otherPlanet.DoInvasion(teamId, numShips, effectiveness);
 
             // Destroy on the server
