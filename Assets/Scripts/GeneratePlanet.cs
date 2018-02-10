@@ -5,6 +5,10 @@ using UnityEngine;
 public class GeneratePlanet : MonoBehaviour {
 
     public Material material;
+
+    public INoiseGenerator noiseSource;
+
+    /*
     public int seed;
 
     private List<Vector3> gradientValues;
@@ -51,20 +55,7 @@ public class GeneratePlanet : MonoBehaviour {
                 }
             }
         }
-
-        /*
-         *      3 --- 7
-         *    / |   / |
-         *   1 --- 5  |
-         *   |  2 -|- 6
-         *   | /   | /
-         *   0 --- 4
-         *   
-         *   Z  Y
-         *   ^ /
-         *   |/
-         *   o--> X
-         */
+        
         var floorValue = Mathf.Lerp(
             Mathf.Lerp(dots[0], dots[4], x),
             Mathf.Lerp(dots[2], dots[6], x),
@@ -99,6 +90,7 @@ public class GeneratePlanet : MonoBehaviour {
         }
         return result / 2.0f + 0.5f;
     }
+*/
 
     private Color ColorScale(float value, List<Color> palette)
     {
@@ -148,7 +140,7 @@ public class GeneratePlanet : MonoBehaviour {
                     Mathf.Sin(((float)y / height - 0.5f) * 3.14159265f)// * scale
                 );
 
-                var noise = ComputeFBM(pixelSpaceCoords, 0, 0.5f, 8);
+                var noise = noiseSource.ValueAtPoint(pixelSpaceCoords);
                 colors[x + width * y] = ColorScale(noise, new List<Color> {
                     Color.blue,
                     Color.green,

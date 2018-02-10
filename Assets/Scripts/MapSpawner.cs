@@ -20,7 +20,6 @@ public class MapSpawner : MonoBehaviour {
                 return x;
             }
         }
-        return 0.0f;
     }
 
     // Use this for initialization
@@ -52,8 +51,8 @@ public class MapSpawner : MonoBehaviour {
             planet.playerObject = playerObject;
 
             var planetGenerator = planetObject.GetComponent<GeneratePlanet>();
-            planetGenerator.seed = (int)(Random.value * 100000);
-            Debug.Log("Planet has seed "+planetGenerator.seed);
+            //planetGenerator.seed = (int)(Random.value * 100000);
+            //Debug.Log("Planet has seed "+planetGenerator.seed);
 
             planetGenerator.material = planet.GetComponent<Renderer>().materials[0];
 

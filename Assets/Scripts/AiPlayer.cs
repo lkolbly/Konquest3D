@@ -38,10 +38,15 @@ public class AiPlayer : MonoBehaviour {
             }
         }
 
-        // If we have >1 ship, send to a neutral planet
+        // If we can't find any neutral planets, attack a player. Otherwise give up.
         if (neutralPlanets.Count == 0)
         {
-            return;
+            if (theirPlanets.Count == 0)
+            {
+                return;
+            }
+
+            neutralPlanets = theirPlanets; // We attack the neutral planets... So pretend theirs are neutral.
         }
 
         foreach (GameObject planetObj in ourPlanets)
