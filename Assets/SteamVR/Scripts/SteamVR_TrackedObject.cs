@@ -35,6 +35,9 @@ public class SteamVR_TrackedObject : MonoBehaviour
 	[Tooltip("If not set, relative to parent")]
 	public Transform origin;
 
+    private Vector3 newPosition;
+    private Quaternion newRotation;
+
     public bool isValid { get; private set; }
 
 	private void OnNewPoses(TrackedDevicePose_t[] poses)
@@ -60,15 +63,33 @@ public class SteamVR_TrackedObject : MonoBehaviour
 
 		if (origin != null)
 		{
-			transform.position = origin.transform.TransformPoint(pose.pos);
-			transform.rotation = origin.rotation * pose.rot;
-		}
-		else
+            newPosition = origin.transform.TransformPoint(pose.pos);
+            newRotation = origin.rotation * pose.rot;
+            /*transform.position = origin.transform.TransformPoint(pose.pos);
+            transform.rotation = origin.rotation * pose.rot;*/
+        }
+        else
 		{
-			transform.localPosition = pose.pos;
-			transform.localRotation = pose.rot;
-		}
-	}
+            newPosition = pose.pos;
+            newRotation = pose.rot;
+            /*transform.localPosition = pose.pos;
+            transform.localRotation = pose.rot;*/
+        }
+    }
+
+    void Update()
+    {
+        if (origin != null)
+        {
+            transform.position = newPosition;
+            transform.rotation = newRotation;
+        }
+        else
+        {
+            transform.localPosition = newPosition;
+            transform.localRotation = newRotation;
+        }
+    }
 
 	SteamVR_Events.Action newPosesAction;
 
