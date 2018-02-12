@@ -70,7 +70,7 @@ public class PerlinGenerator : INoiseGenerator {
     }
 
     // Use this for initialization
-    void Start()
+    void Awake()
     {
         if (seed == 0)
         {

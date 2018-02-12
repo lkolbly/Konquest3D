@@ -6,6 +6,7 @@ using UnityEngine.Networking;
 public class MapSpawner : MonoBehaviour {
 
     public GameObject planetPrefab;
+    public GameObject desertGeneratorPrefab;
     public GameObject playerObject;
 
     // Returns a value between -1 and 1, peaking at 0.
@@ -29,6 +30,8 @@ public class MapSpawner : MonoBehaviour {
         for (var i = 0; i < 10; ++i)
         {
             var planetObject = Instantiate(planetPrefab, Random.insideUnitSphere + transform.position, Quaternion.identity);
+            var generatorObject = Instantiate(desertGeneratorPrefab, Vector3.zero, Quaternion.identity);
+            generatorObject.transform.parent = planetObject.transform;
             var planet = planetObject.GetComponent<Planet>();
 
             planet.constructionTime = triangleDistribution() * 5.0f + 5.0f;

@@ -96,6 +96,7 @@ GameObject:
   - component: {fileID: 114523071547148760}
   - component: {fileID: 114829787660162288}
   - component: {fileID: 114954925103013372}
+  - component: {fileID: 114998437515794100}
   m_Layer: 0
   m_Name: Planet
   m_TagString: Untagged
@@ -626,6 +627,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: db84d7220ec6610479b2ed2db860d39c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114998437515794100
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1318389326356658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 265ccae37728e7f4ebc9e50f4b9edb12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!120 &120417668569921272

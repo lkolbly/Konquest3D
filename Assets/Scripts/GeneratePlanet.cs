@@ -22,7 +22,7 @@ public class GeneratePlanet : MonoBehaviour {
     }
 
     // Use this for initialization
-    void Start () {
+    public void Generate () {
         var startTime = Time.realtimeSinceStartup;
 
         int width = 64;
