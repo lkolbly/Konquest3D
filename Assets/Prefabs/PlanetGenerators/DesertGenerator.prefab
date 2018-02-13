@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4314624941100248}
   - component: {fileID: 114210340641752460}
   - component: {fileID: 114610573634236624}
-  - component: {fileID: 114964516967033922}
+  - component: {fileID: 114874036791393662}
   m_Layer: 0
   m_Name: DesertGenerator
   m_TagString: Untagged
@@ -66,9 +66,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   noiseSource: {fileID: 114210340641752460}
-  exponentialDecay: 0.5
+  exponentialDecay: 0.7
   numberOfOctaves: 8
---- !u!114 &114964516967033922
+--- !u!114 &114874036791393662
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -76,8 +76,39 @@ MonoBehaviour:
   m_GameObject: {fileID: 1762540459208068}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0522960cf4727d64a921b151f62ee6eb, type: 3}
+  m_Script: {fileID: 11500000, guid: eafd33d8d4bc1604c9812a9f10e4d516, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   material: {fileID: 0}
+  resolution: 256
   noiseSource: {fileID: 114610573634236624}
+  colorCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.38601935
+      value: 0.12766933
+      inSlope: 1.2460351
+      outSlope: 1.2460351
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.6147892
+      value: 0.8522446
+      inSlope: 1.2841821
+      outSlope: 1.2841821
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
