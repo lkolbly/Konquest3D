@@ -51,7 +51,7 @@ public class CreateUVSphere : ScriptableWizard
         sphere.AddComponent(typeof(MeshRenderer));
 
         string sphereAssetName = sphere.name + numberOfRings + "_" + numberOfSlices + ".asset";
-        Mesh mesh = (Mesh)AssetDatabase.LoadAssetAtPath("Assets/Editor/" + sphereAssetName, typeof(Mesh));
+        Mesh mesh = (Mesh)AssetDatabase.LoadAssetAtPath("Assets/Mesh/" + sphereAssetName, typeof(Mesh));
 
         if (mesh == null)
         {
@@ -59,6 +59,7 @@ public class CreateUVSphere : ScriptableWizard
             mesh.name = sphere.name;
 
             List<Vector3> vertList = new List<Vector3>();
+            List<Vector4> tanList = new List<Vector4>();
             List<Vector2> UvList = new List<Vector2>();
 
             // Note: Topologically, this UV sphere is a grid
@@ -68,11 +69,17 @@ public class CreateUVSphere : ScriptableWizard
             {
                 for (var slice = 0; slice < numberOfSlices; ++slice)
                 {
-                    var xzRadius = Mathf.Sin((float)ring / (numberOfRings - 1) * 3.14159265f);
+                    var xzRadius = radius * Mathf.Sin((float)ring / (numberOfRings - 1) * 3.14159265f);
                     vertList.Add(new Vector3(
                         xzRadius * Mathf.Sin((float)slice / (numberOfSlices - 1) * 2 * 3.14159265f), // Minus 1 because we want the last vertices to overlap with the first
-                        radius * 2 * Mathf.Cos((float)ring / (numberOfRings - 1) * 3.14159265f),
+                        radius * Mathf.Cos((float)ring / (numberOfRings - 1) * 3.14159265f),
                         xzRadius * Mathf.Cos((float)slice / (numberOfSlices - 1) * 2 * 3.14159265f)
+                    ));
+                    tanList.Add(new Vector4(
+                        -Mathf.Cos((float)slice / (numberOfSlices - 1) * 2 * 3.14159265f), // Minus 1 because we want the last vertices to overlap with the first
+                        0,
+                        Mathf.Sin((float)slice / (numberOfSlices - 1) * 2 * 3.14159265f),
+                        1.0f
                     ));
                     UvList.Add(new Vector2(
                         (float)slice / numberOfSlices,
@@ -103,6 +110,7 @@ public class CreateUVSphere : ScriptableWizard
             }
 
             mesh.vertices = vertList.ToArray();
+            mesh.tangents = tanList.ToArray();
             mesh.triangles = triList.ToArray();
             mesh.uv = UvList.ToArray();
 
@@ -114,7 +122,7 @@ public class CreateUVSphere : ScriptableWizard
 
             mesh.RecalculateBounds();
 
-            AssetDatabase.CreateAsset(mesh, "Assets/Editor/" + sphereAssetName);
+            AssetDatabase.CreateAsset(mesh, "Assets/Mesh/" + sphereAssetName);
             AssetDatabase.SaveAssets();
         }
 
