@@ -70,6 +70,15 @@ public class CreateUVSphere : ScriptableWizard
                 for (var slice = 0; slice < numberOfSlices; ++slice)
                 {
                     var xzRadius = radius * Mathf.Sin((float)ring / (numberOfRings - 1) * 3.14159265f);
+                    /*vertList.Add(new Vector3(
+                        (float)slice / numberOfSlices,
+                        (float)ring / numberOfRings,
+                        0.0f
+                    ));
+                    tanList.Add(new Vector3(
+                        1.0f, 0, 0
+                    ));*/
+
                     vertList.Add(new Vector3(
                         xzRadius * Mathf.Sin((float)slice / (numberOfSlices - 1) * 2 * 3.14159265f), // Minus 1 because we want the last vertices to overlap with the first
                         radius * Mathf.Cos((float)ring / (numberOfRings - 1) * 3.14159265f),
@@ -82,8 +91,8 @@ public class CreateUVSphere : ScriptableWizard
                         1.0f
                     ));
                     UvList.Add(new Vector2(
-                        (float)slice / numberOfSlices,
-                        (float)ring / numberOfRings
+                        (float)slice / (numberOfSlices - 1),
+                        (float)ring / (numberOfRings - 1)
                     ));
                 }
 
