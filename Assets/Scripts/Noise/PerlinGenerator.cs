@@ -72,6 +72,11 @@ public class PerlinGenerator : INoiseGenerator {
     // Use this for initialization
     void Awake()
     {
+        InitializeTables();
+    }
+
+    public void InitializeTables()
+    {
         if (seed == 0)
         {
             seed = (int)(Random.value * 1000000.0f);

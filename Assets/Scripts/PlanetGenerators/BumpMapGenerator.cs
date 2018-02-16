@@ -49,7 +49,7 @@ public class BumpMapGenerator : GeneratePlanet
         normalTexture.Apply();
 
         //Code for exporting the image to assets folder
-        System.IO.File.WriteAllBytes("Assets/NormalMap.png", normalTexture.EncodeToPNG());
+        //System.IO.File.WriteAllBytes("Assets/NormalMap.png", normalTexture.EncodeToPNG());
 
         return normalTexture;
     }
