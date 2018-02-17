@@ -35,3 +35,6 @@ sysinfo.txt
 out_Data/*
 out.exe
 UnityPlayer.dll
+
+# Code generation
+/Assets/Prefabs/Planets/generated/

@@ -46,7 +46,7 @@ public class DesertGenerator : GeneratePlanet {
                 );
 
                 var noise = noiseSource.ValueAtPoint(pixelSpaceCoords);
-                colors[x + width * y] = ColorScale(colorCurve.Evaluate(noise), new List<Color> {
+                colors[x + width * y] = ColorScale(noise, new List<Color> {
                     new Color(229.0f/255.0f, 172.0f/255.0f, 114.0f/255.0f),
                     new Color(0.5f, 0.4f, 0.0f),
                     new Color(1.0f, 1.0f, 1.0f)

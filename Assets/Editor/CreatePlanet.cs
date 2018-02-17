@@ -53,7 +53,6 @@ public class CreatePlanet : ScriptableWizard
         MeshFilter filter = (MeshFilter)planet.AddComponent(typeof(MeshFilter));
         planet.AddComponent(typeof(MeshRenderer));
 
-        string sphereAssetName = planet.name + numberOfRings + "_" + numberOfSlices + ".asset";
         Mesh mesh = (Mesh)AssetDatabase.LoadAssetAtPath("Assets/Mesh/UvSphere20_20.asset", typeof(Mesh));
 
         // Generate the textures
@@ -66,14 +65,16 @@ public class CreatePlanet : ScriptableWizard
         fractal.exponentialDecay = 0.7f;
         fractal.numberOfOctaves = 8;
 
-        var generator = new IslandGenerator();
+        var generator = new DesertGenerator();// new IslandGenerator();
         var renderer = planet.GetComponent<Renderer>();
         var material = new Material((Material)AssetDatabase.LoadAssetAtPath("Assets/Materials/PlanetMaterial.mat", typeof(Material))); //new Material(renderer.sharedMaterial);
         generator.resolution = 128;
         generator.material = material;
         generator.noiseSource = fractal;
         generator.Generate();
+        material.DisableKeyword("_NORMALMAP");
         renderer.sharedMaterial = material;
+        //renderer.materials[0] = material;
 
         filter.sharedMesh = mesh;
         mesh.RecalculateBounds();
@@ -82,5 +83,20 @@ public class CreatePlanet : ScriptableWizard
             planet.AddComponent(typeof(SphereCollider));
 
         Selection.activeObject = planet;
+
+        //var tex = material.GetTexture("_SpecGlossMap");
+        //AssetDatabase.CreateAsset(tex, "Assets/Prefabs/Planets/generated/planettex000.asset");
+
+        var tex = material.GetTexture("_MainTex");
+        AssetDatabase.CreateAsset(tex, "Assets/Prefabs/Planets/generated/planettex000.asset");
+
+        //tex = new Texture2D(material.GetTexture("_BumpMap"));
+        //AssetDatabase.CreateAsset(tex, "Assets/Prefabs/Planets/generated/planetbump000.asset");
+
+        AssetDatabase.CreateAsset(material, "Assets/Prefabs/Planets/generated/planet000.mat");
+        AssetDatabase.SaveAssets();
+
+        PrefabUtility.CreatePrefab("Assets/Prefabs/Planets/generated/planet000.prefab", planet);
+        GameObject.DestroyImmediate(planet);
     }
 }

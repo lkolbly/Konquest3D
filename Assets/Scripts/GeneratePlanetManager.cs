@@ -8,9 +8,9 @@ public class GeneratePlanetManager : MonoBehaviour {
 	void Start ()
     {
         // Tell the generator about us
-        GetComponentInChildren<GeneratePlanet>().material = GetComponent<Renderer>().materials[0];
+        /*GetComponentInChildren<GeneratePlanet>().material = GetComponent<Renderer>().materials[0];
         Debug.Log(GetComponent<Renderer>().materials[0]);
-        GetComponentInChildren<GeneratePlanet>().Generate();
+        GetComponentInChildren<GeneratePlanet>().Generate();*/
     }
 	
 	// Update is called once per frame

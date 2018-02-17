@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GeneratePlanet : MonoBehaviour {
+public class GeneratePlanet {
 
     public Material material;
     public int resolution; // This is *roughly* resolution in pixels, though it can vary generator to generator
