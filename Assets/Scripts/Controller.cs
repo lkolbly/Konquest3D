@@ -28,13 +28,19 @@ public class Controller : MonoBehaviour {
         //
     }
 
-    private void DoTouchpadAxisChanged(object sender, ControllerInteractionEventArgs e)
+    private Player GetPlayer()
     {
         var networkManager = GameObject.Find("NetworkLobby");
         var localPlayerObject = networkManager == null ?
             playerObject :
             networkManager.GetComponent<MyNetworkManager>().localPlayerObject;
         var player = localPlayerObject.GetComponent<Player>();
+        return player;
+    }
+
+    private void DoTouchpadAxisChanged(object sender, ControllerInteractionEventArgs e)
+    {
+        var player = GetPlayer();
         if (player.getSource() == null)
         {
             return;
@@ -55,6 +61,7 @@ public class Controller : MonoBehaviour {
     private void DoTriggerPressed(object sender, ControllerInteractionEventArgs e)
     {
         // Find the first planet we're touching
+        var foundPlanet = false;
         foreach (GameObject planetObj in Object.FindObjectsOfType<GameObject>())
         {
             var planet = planetObj.GetComponent<Planet>();
@@ -63,14 +70,31 @@ public class Controller : MonoBehaviour {
                 if (planet.TrySelecting())
                 {
                     Debug.Log("Found a planet to select");
+                    foundPlanet = true;
                     break;
                 }
             }
+        }
+        if (!foundPlanet)
+        {
+            // Deselect all planets
+            var player = GetPlayer();
+            player.setSource(null);
         }
     }
 
     // Update is called once per frame
     void Update () {
-        
+        var player = GetPlayer();
+        if (player.getSource() == null)
+        {
+            // We don't need to be drawing the number anymore
+            touchpadFleetCount.text = "";
+        }
+        else
+        {
+            // Do show the text
+            touchpadFleetCount.text = lastSelectedFleetSize.ToString();
+        }
     }
 }
