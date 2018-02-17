@@ -23,6 +23,12 @@ public class MapSpawner : MonoBehaviour {
         }
     }
 
+    private string PadNumber(int n, int length)
+    {
+        var s = n.ToString("D");
+        return new string('0', length - s.Length) + s;
+    }
+
     // Use this for initialization
     void Start () {
         // Instantiate a bunch of planets
@@ -32,6 +38,11 @@ public class MapSpawner : MonoBehaviour {
             var planetObject = Instantiate(planetPrefab, Random.insideUnitSphere + transform.position, Quaternion.identity);
             //var generatorObject = Instantiate(desertGeneratorPrefab, Vector3.zero, Quaternion.identity);
             //generatorObject.transform.parent = planetObject.transform;
+            var prefab = Resources.Load("generated/planet" + PadNumber((int)(Random.value * 64), 3), typeof(GameObject)) as GameObject;
+            var planetGraphics = Instantiate(prefab, planetObject.transform.position, Quaternion.identity);
+            planetGraphics.transform.parent = planetObject.transform;
+            planetGraphics.transform.localScale = new Vector3(1f, 1f, 1f);
+
             var planet = planetObject.GetComponent<Planet>();
 
             planet.constructionTime = triangleDistribution() * 5.0f + 5.0f;

@@ -93,9 +93,6 @@ GameObject:
   - component: {fileID: 114248271664089304}
   - component: {fileID: 114671454792433274}
   - component: {fileID: 114133522748503060}
-  - component: {fileID: 114523071547148760}
-  - component: {fileID: 114829787660162288}
-  - component: {fileID: 114954925103013372}
   - component: {fileID: 114998437515794100}
   m_Layer: 0
   m_Name: Planet
@@ -396,18 +393,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114523071547148760
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1318389326356658}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ed9576793dea6043befb609accef38d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  seed: 0
 --- !u!114 &114557801730496974
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -557,20 +542,6 @@ MonoBehaviour:
     m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: New Text
---- !u!114 &114829787660162288
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1318389326356658}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ae60826d71dd88a4989394feda7b3517, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  noiseSource: {fileID: 114523071547148760}
-  exponentialDecay: 0.5
-  numberOfOctaves: 8
 --- !u!114 &114856190973108290
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -605,19 +576,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 2
   m_VerticalFit: 2
---- !u!114 &114954925103013372
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1318389326356658}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0522960cf4727d64a921b151f62ee6eb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  material: {fileID: 2100000, guid: 3671ead1450c77a43977917b937b7fab, type: 2}
-  resolution: 0
 --- !u!114 &114959920806113552
 MonoBehaviour:
   m_ObjectHideFlags: 1

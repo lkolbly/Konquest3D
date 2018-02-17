@@ -11,6 +11,8 @@ public class GeneratePlanetManager : MonoBehaviour {
         /*GetComponentInChildren<GeneratePlanet>().material = GetComponent<Renderer>().materials[0];
         Debug.Log(GetComponent<Renderer>().materials[0]);
         GetComponentInChildren<GeneratePlanet>().Generate();*/
+        //var prefab = Resources.Load("Assets/Resources/generated/planet000.prefab") as GameObject;
+        //prefab.transform.parent = gameObject.transform;
     }
 	
 	// Update is called once per frame

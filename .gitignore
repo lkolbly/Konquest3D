@@ -37,4 +37,4 @@ out.exe
 UnityPlayer.dll
 
 # Code generation
-/Assets/Prefabs/Planets/generated/
+/Assets/Resources/generated/

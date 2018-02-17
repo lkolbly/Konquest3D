@@ -7,41 +7,124 @@ using System.Collections.Generic;
 
 public class CreatePlanet : ScriptableWizard
 {
+    public enum PlanetType
+    {
+        DesertPlanet,
+        IslandPlanet,
+        CustomBumpmapPlanet
+    };
+    //public PlanetType planetType;
 
-    public int numberOfSlices = 10;
-    public int numberOfRings = 10;
+    public int resolution = 128;
     public float radius = 0.5f;
     public bool addCollider = false;
     public string optionalName;
 
-    static Camera cam;
-    static Camera lastUsedCam;
+    // Parameters for the desert planet
+    public int numberOfDesertPlanets = 32;
+    public AnimationCurve desertColorCurve = new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, 1));
+
+    // Parameters for the island planet
+    public int numberOfIslandPlanets = 32;
+
+    // Parameters for the custom bumpmap planet
+    public int numberOfBumpmapPlanets = 1;
+    public AnimationCurve bumpmapColorCurve = new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, 1));
+    public Texture2D bumpmapReferenceImage;
 
     [MenuItem("GameObject/Create Other/Planet...")]
     static void CreateWizard()
     {
-        cam = Camera.current;
-        // Hack because camera.current doesn't return editor camera if scene view doesn't have focus
-        if (!cam)
-            cam = lastUsedCam;
-        else
-            lastUsedCam = cam;
         ScriptableWizard.DisplayWizard("Create Planet", typeof(CreatePlanet));
     }
 
 
     void OnWizardUpdate()
     {
-        if (numberOfSlices < 3) numberOfSlices = 3;
-        if (numberOfRings < 4) numberOfRings = 4;
+    }
+
+    private GeneratePlanet CreateDesertPlanetGenerator()
+    {
+        var perlin = new PerlinGenerator();
+        perlin.InitializeTables();
+
+        var fractal = new ExponentialOctaveFractalNoiseGenerator();
+        fractal.noiseSource = perlin;
+        fractal.exponentialDecay = 0.7f;
+        fractal.numberOfOctaves = 8;
+
+        var generator = new DesertGenerator();
+        generator.colorCurve = desertColorCurve;
+        generator.resolution = resolution;
+        generator.noiseSource = fractal;
+        return generator;
+    }
+
+    private GeneratePlanet CreateIslandPlanetGenerator()
+    {
+        var perlin = new PerlinGenerator();
+        perlin.InitializeTables();
+
+        var fractal = new ExponentialOctaveFractalNoiseGenerator();
+        fractal.noiseSource = perlin;
+        fractal.exponentialDecay = 0.7f;
+        fractal.numberOfOctaves = 8;
+
+        var generator = new IslandGenerator();
+        generator.resolution = resolution;
+        generator.noiseSource = fractal;
+        return generator;
+    }
+
+    private GeneratePlanet CreateBumpmapPlanetGenerator(string bumpmapSaveDir)
+    {
+        var perlin = new PerlinGenerator();
+        perlin.InitializeTables();
+
+        var fractal = new ExponentialOctaveFractalNoiseGenerator();
+        fractal.noiseSource = perlin;
+        fractal.exponentialDecay = 0.7f;
+        fractal.numberOfOctaves = 8;
+
+        var generator = new BumpMapGenerator();
+        generator.bumpmapSaveDir = bumpmapSaveDir;
+        generator.guideTexture = bumpmapReferenceImage;
+        generator.colorCurve = bumpmapColorCurve;
+        generator.resolution = resolution;
+        generator.noiseSource = fractal;
+        return generator;
+    }
+
+    private string PadNumber(int n, int length)
+    {
+        var s = n.ToString("D");
+        return new string('0', length - s.Length) + s;
     }
 
     void OnWizardCreate()
     {
-        GameObject planet = new GameObject();
+        for (var i = 0; i < numberOfDesertPlanets; ++i)
+        {
+            EditorUtility.DisplayProgressBar("Progess", "Planet", (float)i/64.0f);
+            GeneratePlanetWithParameters("planet" + PadNumber(i, 3), PlanetType.DesertPlanet);
+        }
 
-        //AssetDatabase.CreateAsset(mesh, "Assets/Mesh/" + sphereAssetName);
-        //AssetDatabase.SaveAssets();
+        for (var i = 0; i < numberOfIslandPlanets; ++i)
+        {
+            EditorUtility.DisplayProgressBar("Progess", "Planet", (float)(i+32) / 64.0f);
+            GeneratePlanetWithParameters("planet" + PadNumber(i+32, 3), PlanetType.IslandPlanet);
+        }
+
+        for (var i = 0; i < numberOfBumpmapPlanets; ++i)
+        {
+            GeneratePlanetWithParameters("planet" + PadNumber(i+32+32, 3), PlanetType.CustomBumpmapPlanet);
+        }
+        EditorUtility.ClearProgressBar();
+    }
+
+    void GeneratePlanetWithParameters(string name, PlanetType planetType)
+    {
+        GameObject planet = new GameObject();
 
         if (!string.IsNullOrEmpty(optionalName))
             planet.name = optionalName;
@@ -55,48 +138,62 @@ public class CreatePlanet : ScriptableWizard
 
         Mesh mesh = (Mesh)AssetDatabase.LoadAssetAtPath("Assets/Mesh/UvSphere20_20.asset", typeof(Mesh));
 
-        // Generate the textures
-        var perlin = new PerlinGenerator();
-        perlin.seed = 123;
-        perlin.InitializeTables();
-
-        var fractal = new ExponentialOctaveFractalNoiseGenerator();
-        fractal.noiseSource = perlin;
-        fractal.exponentialDecay = 0.7f;
-        fractal.numberOfOctaves = 8;
-
-        var generator = new DesertGenerator();// new IslandGenerator();
-        var renderer = planet.GetComponent<Renderer>();
-        var material = new Material((Material)AssetDatabase.LoadAssetAtPath("Assets/Materials/PlanetMaterial.mat", typeof(Material))); //new Material(renderer.sharedMaterial);
-        generator.resolution = 128;
-        generator.material = material;
-        generator.noiseSource = fractal;
-        generator.Generate();
-        material.DisableKeyword("_NORMALMAP");
-        renderer.sharedMaterial = material;
-        //renderer.materials[0] = material;
-
         filter.sharedMesh = mesh;
         mesh.RecalculateBounds();
 
         if (addCollider)
             planet.AddComponent(typeof(SphereCollider));
 
-        Selection.activeObject = planet;
+        var planetBasePath = "Assets/Resources/generated/" + name;
 
-        //var tex = material.GetTexture("_SpecGlossMap");
-        //AssetDatabase.CreateAsset(tex, "Assets/Prefabs/Planets/generated/planettex000.asset");
+        var renderer = planet.GetComponent<Renderer>();
+        var material = new Material((Material)AssetDatabase.LoadAssetAtPath("Assets/Materials/PlanetMaterial.mat", typeof(Material))); //new Material(renderer.sharedMaterial);
+        GeneratePlanet generator = null;
+        switch (planetType)
+        {
+            case PlanetType.DesertPlanet: generator = CreateDesertPlanetGenerator(); break;
+            case PlanetType.IslandPlanet: generator = CreateIslandPlanetGenerator(); break;
+            case PlanetType.CustomBumpmapPlanet: generator = CreateBumpmapPlanetGenerator(planetBasePath + "_BumpMap.png"); break;
+            default: Debug.Log("Specified an unknown planetType!"); return;
+        }
+        generator.material = material;
+        generator.Generate();
 
-        var tex = material.GetTexture("_MainTex");
-        AssetDatabase.CreateAsset(tex, "Assets/Prefabs/Planets/generated/planettex000.asset");
+        // Save all the textures and reload them
+        var textureNames = new List<string>()
+        {
+            "_SpecGlossMap",
+            "_MainTex",
+            "_BumpMap"
+        };
 
-        //tex = new Texture2D(material.GetTexture("_BumpMap"));
-        //AssetDatabase.CreateAsset(tex, "Assets/Prefabs/Planets/generated/planetbump000.asset");
+        foreach (var textureName in textureNames)
+        {
+            var tex = (Texture2D)material.GetTexture(textureName);
+            if (tex != null)
+            {
+                System.IO.File.WriteAllBytes(planetBasePath + textureName + ".png", tex.EncodeToPNG());
+                AssetDatabase.Refresh();
+                material.SetTexture(textureName, (Texture2D)AssetDatabase.LoadAssetAtPath(planetBasePath + textureName + ".png", typeof(Texture2D)));
+            }
+        }
 
-        AssetDatabase.CreateAsset(material, "Assets/Prefabs/Planets/generated/planet000.mat");
+        var bumpTex = material.GetTexture("_BumpMap");
+        if (bumpTex != null)
+        {
+            var path = planetBasePath + "_BumpMap.png";
+            Debug.Log(path);
+            var importer = (TextureImporter)TextureImporter.GetAtPath(path);
+            importer.textureType = TextureImporterType.NormalMap;
+            AssetDatabase.ImportAsset(planetBasePath + "_BumpMap.png", ImportAssetOptions.ForceUpdate);
+        }
+
+        renderer.sharedMaterial = material;
+
+        AssetDatabase.CreateAsset(material, planetBasePath + ".mat");
         AssetDatabase.SaveAssets();
 
-        PrefabUtility.CreatePrefab("Assets/Prefabs/Planets/generated/planet000.prefab", planet);
+        PrefabUtility.CreatePrefab(planetBasePath + ".prefab", planet);
         GameObject.DestroyImmediate(planet);
     }
 }

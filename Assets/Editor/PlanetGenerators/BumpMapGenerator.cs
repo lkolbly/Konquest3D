@@ -8,6 +8,7 @@ public class BumpMapGenerator : GeneratePlanet
     public INoiseGenerator noiseSource;
     public Texture2D guideTexture;
     public AnimationCurve colorCurve;
+    public string bumpmapSaveDir;
 
     // From https://gamedev.stackexchange.com/questions/106703/create-a-normal-map-using-a-script-unity
     private Texture2D NormalMap(Texture2D source, float strength)
@@ -50,6 +51,7 @@ public class BumpMapGenerator : GeneratePlanet
 
         //Code for exporting the image to assets folder
         //System.IO.File.WriteAllBytes("Assets/NormalMap.png", normalTexture.EncodeToPNG());
+        //System.IO.File.WriteAllBytes(bumpmapSaveDir, normalTexture.EncodeToPNG());
 
         return normalTexture;
     }
@@ -145,13 +147,13 @@ public class BumpMapGenerator : GeneratePlanet
         color.Apply();
         albedo.Apply();
 
-        NormalMap(heightTex, 1.0f);
+        var bumpTex = NormalMap(heightTex, 1.0f);
         material.EnableKeyword("_SPECGLOSSMAP");
         //material.EnableKeyword("_NORMALMAP");
         //material.EnableKeyword("_TANGENT_TO_WORLD");
         //material.EnableKeyword("UNITY_TANGENT_ORTHONORMALIZE");
         material.SetTexture("_MainTex", color);
-        //material.SetTexture("_BumpMap", NormalMap(heightTex, 1.0f));
+        material.SetTexture("_BumpMap", bumpTex);
         material.SetTexture("_SpecGlossMap", albedo);
 
         var totalTime = Time.realtimeSinceStartup - startTime;
