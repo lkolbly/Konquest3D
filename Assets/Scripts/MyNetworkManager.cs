@@ -22,6 +22,13 @@ public class MyNetworkManager : NetworkLobbyManager {
         return player;
     }
 
+    public override void OnLobbyClientEnter()
+    {
+        base.OnLobbyClientEnter();
+
+        Debug.Log("Client entering lobby");
+    }
+
     // Update is called once per frame
     void Update () {
         

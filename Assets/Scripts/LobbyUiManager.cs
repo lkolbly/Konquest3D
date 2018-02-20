@@ -22,7 +22,7 @@ public class LobbyUiManager : MonoBehaviour {
 
     public void OnConnectToServerClicked()
     {
-        networkManager.networkAddress = "pillow.rscheme.org";
+        networkManager.networkAddress = "localhost";
         networkManager.networkPort = 3058;
         networkManager.StartClient();
 
@@ -31,12 +31,12 @@ public class LobbyUiManager : MonoBehaviour {
 
     public void OnReadyClicked()
     {
-        //
+        Debug.Log("Player ready");
     }
 
     public void OnLeaveMatchClicked()
     {
-        //
+        Debug.Log("Leaving match");
     }
 
     private void SwitchToMatchLobbyUi()
@@ -47,6 +47,6 @@ public class LobbyUiManager : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-		
+        Debug.Log(networkManager.numPlayers);
 	}
 }
