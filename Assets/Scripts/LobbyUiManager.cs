@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class LobbyUiManager : MonoBehaviour {
 
@@ -15,7 +16,7 @@ public class LobbyUiManager : MonoBehaviour {
 
     public void OnStartServerClicked()
     {
-        networkManager.StartServer();
+        networkManager.StartHost();
 
         SwitchToMatchLobbyUi();
     }
@@ -32,11 +33,44 @@ public class LobbyUiManager : MonoBehaviour {
     public void OnReadyClicked()
     {
         Debug.Log("Player ready");
+        var networkPlayer = GetLocalNetworkPlayer();
+        if (networkPlayer.readyToBegin)
+        {
+            networkPlayer.SendNotReadyToBeginMessage();
+        }
+        else
+        {
+            networkPlayer.SendReadyToBeginMessage();
+        }
     }
 
     public void OnLeaveMatchClicked()
     {
         Debug.Log("Leaving match");
+        if (!Network.isClient)
+        {
+            // We're the host
+            networkManager.StopHost();
+        }
+        else
+        {
+            // We're the client
+            networkManager.StopClient();
+        }
+        SwitchToMainLobbyUi();
+    }
+
+    private NetworkLobbyPlayer GetLocalNetworkPlayer()
+    {
+        foreach (GameObject go in GameObject.FindObjectsOfType<GameObject>())
+        {
+            var nm = go.GetComponent<NetworkLobbyPlayer>();
+            if (nm != null)
+            {
+                return nm;
+            }
+        }
+        return null;
     }
 
     private void SwitchToMatchLobbyUi()
@@ -45,8 +79,14 @@ public class LobbyUiManager : MonoBehaviour {
         matchCanvas.gameObject.SetActive(true);
     }
 
+    private void SwitchToMainLobbyUi()
+    {
+        mainCanvas.gameObject.SetActive(true);
+        matchCanvas.gameObject.SetActive(false);
+    }
+
     // Update is called once per frame
     void Update () {
-        Debug.Log(networkManager.numPlayers);
+        //Debug.Log(networkManager.numPlayers);
 	}
 }
