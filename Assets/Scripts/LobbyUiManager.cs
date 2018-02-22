@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
 
 public class LobbyUiManager : MonoBehaviour {
@@ -57,7 +58,8 @@ public class LobbyUiManager : MonoBehaviour {
             // We're the client
             networkManager.StopClient();
         }
-        SwitchToMainLobbyUi();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        //SwitchToMainLobbyUi();
     }
 
     private NetworkLobbyPlayer GetLocalNetworkPlayer()
@@ -67,7 +69,10 @@ public class LobbyUiManager : MonoBehaviour {
             var nm = go.GetComponent<NetworkLobbyPlayer>();
             if (nm != null)
             {
-                return nm;
+                if (nm.isLocalPlayer)
+                {
+                    return nm;
+                }
             }
         }
         return null;

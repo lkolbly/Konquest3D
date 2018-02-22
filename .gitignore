@@ -36,6 +36,7 @@ out_Data/*
 out.exe
 novr_Data/*
 novr.exe
+Builds/*
 UnityPlayer.dll
 
 # Code generation

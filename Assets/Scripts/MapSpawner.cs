@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class MapSpawner : MonoBehaviour {
+public class MapSpawner : NetworkBehaviour {
 
     public GameObject planetPrefab;
     //public GameObject desertGeneratorPrefab;
@@ -14,7 +14,7 @@ public class MapSpawner : MonoBehaviour {
     {
         while (true)
         {
-            var x = Random.value;
+            var x = Random.value * 2.0f - 1.0f;
             var y = Random.value;
             if (y < 1.0f - Mathf.Abs(x))
             {
@@ -32,16 +32,27 @@ public class MapSpawner : MonoBehaviour {
     // Use this for initialization
     void Start () {
         // Instantiate a bunch of planets
-        Debug.Log(Network.isClient + " " + Network.isServer);
+        //GameObject.Find("NetworkLobby").GetComponent<MyNetworkManager>();
+        Debug.Log(isClient + " " + isServer);
+        var networkGame = !isClient && !isServer;
+        // If we're a server or a singleplayer game, generate planets
+        if (networkGame && isClient)
+        {
+            return;
+        }
         for (var i = 0; i < 10; ++i)
         {
             var planetObject = Instantiate(planetPrefab, Random.insideUnitSphere + transform.position, Quaternion.identity);
             //var generatorObject = Instantiate(desertGeneratorPrefab, Vector3.zero, Quaternion.identity);
             //generatorObject.transform.parent = planetObject.transform;
-            var prefab = Resources.Load("generated/planet" + PadNumber((int)(Random.value * 64), 3), typeof(GameObject)) as GameObject;
-            var planetGraphics = Instantiate(prefab, planetObject.transform.position, Quaternion.identity);
-            planetGraphics.transform.parent = planetObject.transform;
-            planetGraphics.transform.localScale = new Vector3(1f, 1f, 1f);
+            var graphicId = (int)(Random.value * 64);
+            if (!networkGame)
+            {
+                var prefab = Resources.Load("generated/planet" + PadNumber(graphicId, 3), typeof(GameObject)) as GameObject;
+                var planetGraphics = Instantiate(prefab, planetObject.transform.position, Quaternion.identity);
+                planetGraphics.transform.parent = planetObject.transform;
+                planetGraphics.transform.localScale = new Vector3(1f, 1f, 1f);
+            }
 
             var planet = planetObject.GetComponent<Planet>();
 
@@ -68,9 +79,11 @@ public class MapSpawner : MonoBehaviour {
 
             //planetGenerator.material = planet.GetComponent<Renderer>().materials[0];
 
-            if (Network.isServer)
+            if (isServer)
             {
                 NetworkServer.Spawn(planetObject);
+                planet.RpcSetGraphics(graphicId);
+                //NetworkServer.Spawn(planetGraphics);
             }
         }
     }

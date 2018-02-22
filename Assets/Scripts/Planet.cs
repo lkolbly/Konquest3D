@@ -90,6 +90,22 @@ public class Planet : NetworkBehaviour
         DisplayTeamColor();
     }
 
+    private string PadNumber(int n, int length)
+    {
+        var s = n.ToString("D");
+        return new string('0', length - s.Length) + s;
+    }
+
+    [ClientRpc]
+    public void RpcSetGraphics(int graphicId)
+    {
+        Debug.Log("Setting graphics to " + graphicId);
+        var prefab = Resources.Load("generated/planet" + PadNumber(graphicId, 3), typeof(GameObject)) as GameObject;
+        var planetGraphics = Instantiate(prefab, gameObject.transform.position, Quaternion.identity);
+        planetGraphics.transform.parent = gameObject.transform;
+        planetGraphics.transform.localScale = new Vector3(1f, 1f, 1f);
+    }
+
     [Command]
     public void CmdLaunchFleet(GameObject target, int numShips)
     {
