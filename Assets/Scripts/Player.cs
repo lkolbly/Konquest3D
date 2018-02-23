@@ -58,7 +58,15 @@ public class Player : NetworkBehaviour {
     public override void OnStartLocalPlayer()
     {
         Debug.Log("OnStartLocalPlayer() called");
-        GameObject.Find("NetworkLobby").GetComponent<MyNetworkManager>().localPlayerObject = gameObject;
+
+        // Tell the server we're ready
+        var networkManager = GameObject.Find("NetworkLobby").GetComponent<MyNetworkManager>();
+        //var mapSpawner = GameObject.Find("GameManager").GetComponent<MapSpawner>();
+        //mapSpawner.CmdPlayersReady();
+        var playerReadyNotifier = GameObject.Find("PlayerReadyNotifier").GetComponent<PlayerReadyNotifier>();
+        playerReadyNotifier.CmdPlayersReady();
+
+        networkManager.localPlayerObject = gameObject;
 
         // Go re-render all planets
         foreach (var planet in GameObject.FindObjectsOfType<Planet>())
@@ -77,6 +85,8 @@ public class Player : NetworkBehaviour {
         // Useful for testing multiplayer without multiple players
         if (Random.value < 0.003 && isLocalPlayer)
         {
+            Debug.Log("Launching a ship");
+            
             // Launch 1 ship from one of out planets to one of theirs
 
             // Classify all planets: Ours, theirs, and neutral

@@ -9,6 +9,8 @@ public class MapSpawner : NetworkBehaviour {
     //public GameObject desertGeneratorPrefab;
     public GameObject playerObject;
 
+    private bool hasBuiltWorld = false;
+
     // Returns a value between -1 and 1, peaking at 0.
     private float triangleDistribution()
     {
@@ -30,7 +32,7 @@ public class MapSpawner : NetworkBehaviour {
     }
 
     // Use this for initialization
-    void Start () {
+    public void BuildWorld() {
         // Instantiate a bunch of planets
         //GameObject.Find("NetworkLobby").GetComponent<MyNetworkManager>();
         Debug.Log(isClient + " " + isServer);
@@ -87,9 +89,28 @@ public class MapSpawner : NetworkBehaviour {
             }
         }
     }
-    
+
+    /*[Command]
+    public void CmdPlayersReady()
+    {
+        BuildWorld();
+    }*/
+
+    private void Start()
+    {
+        var networkGame = !isClient && !isServer;
+        if (!networkGame)
+        {
+            BuildWorld();
+        }
+    }
+
     // Update is called once per frame
     void Update () {
-        
+        /*if (!hasBuiltWorld)
+        {
+            BuildWorld();
+            hasBuiltWorld = true;
+        }*/
     }
 }
