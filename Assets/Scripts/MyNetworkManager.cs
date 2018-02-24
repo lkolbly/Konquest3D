@@ -15,10 +15,10 @@ public class MyNetworkManager : NetworkLobbyManager {
 
     public override GameObject OnLobbyServerCreateGamePlayer(NetworkConnection conn, short playerControllerId)
     {
-        Debug.Log("Server adding player");
+        Debug.Log("Server adding player "+playerCount+" "+playerControllerId);
         var player = Instantiate(gamePlayerPrefab, Vector3.zero, Quaternion.identity);
         player.GetComponent<Player>().teamId = ++playerCount;
-        NetworkServer.AddPlayerForConnection(conn, player, playerControllerId);
+        NetworkServer.AddPlayerForConnection(conn, player, (short)(playerCount-1));//playerControllerId);
         return player;
     }
 

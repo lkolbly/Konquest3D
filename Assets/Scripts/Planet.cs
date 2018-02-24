@@ -109,7 +109,7 @@ public class Planet : NetworkBehaviour
     [Command]
     public void CmdLaunchFleet(GameObject target, int numShips)
     {
-        CmdLaunchFleet(target, numShips);
+        LaunchFleet(target, numShips);
     }
 
     public void LaunchFleetDispatch(GameObject target, int numShips)
@@ -144,7 +144,7 @@ public class Planet : NetworkBehaviour
         line.endPosition = target.transform.position;
         shipObj.GetComponent<Ship>().line = lineObject;
 
-        if (Network.isServer) // @TODO: Should this be in CmdLaunchFleet?
+        if (isServer) // @TODO: Should this be in CmdLaunchFleet?
         {
             // Update the network about the new ship
             NetworkServer.Spawn(shipObj);
@@ -251,12 +251,15 @@ public class Planet : NetworkBehaviour
     // Update is called once per frame
     protected void Update()
     {
-        constructionCooldown -= Time.deltaTime;
-        if (constructionCooldown < 0)
+        if (hasAuthority || (!isServer && !isClient))
         {
-            numberOfShips++;
-            constructionCooldown = constructionTime + Mathf.Log10(numberOfShips);
-            UpdateTooltip();
+            constructionCooldown -= Time.deltaTime;
+            if (constructionCooldown < 0)
+            {
+                numberOfShips++;
+                constructionCooldown = constructionTime + Mathf.Log10(numberOfShips);
+                UpdateTooltip();
+            }
         }
     }
 }

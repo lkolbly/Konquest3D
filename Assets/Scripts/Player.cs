@@ -14,6 +14,8 @@ public class Player : NetworkBehaviour {
 
     private int selectedFleetSize;
 
+    private bool hasNotifiedServer = false;
+
     void OnSetTeamId(int teamId)
     {
         // Go re-render all planets
@@ -63,8 +65,6 @@ public class Player : NetworkBehaviour {
         var networkManager = GameObject.Find("NetworkLobby").GetComponent<MyNetworkManager>();
         //var mapSpawner = GameObject.Find("GameManager").GetComponent<MapSpawner>();
         //mapSpawner.CmdPlayersReady();
-        var playerReadyNotifier = GameObject.Find("PlayerReadyNotifier").GetComponent<PlayerReadyNotifier>();
-        playerReadyNotifier.CmdPlayersReady();
 
         networkManager.localPlayerObject = gameObject;
 
@@ -79,9 +79,38 @@ public class Player : NetworkBehaviour {
     void Start () {
         
     }
-    
+
+    /*[Command]
+    public void CmdPlayersReady()
+    {
+        var mapSpawner = GameObject.Find("GameManager").GetComponent<MapSpawner>();
+        mapSpawner.PlayerCheckin();
+    }*/
+
     // Update is called once per frame
-    void Update () {
+    void Update() {
+        if (!hasAuthority)
+        {
+            return;
+        }
+
+        if (!hasNotifiedServer)
+        {
+            /*Debug.Log("Sending player ready notification!");
+            //var playerReadyNotifier = gameObject.GetComponent<PlayerReadyNotifier>();
+            //playerReadyNotifier.CmdPlayersReady();
+            CmdPlayersReady();
+            hasNotifiedServer = true;*/
+            var playerReadyNotifierObject = GameObject.Find("PlayerReadyNotifier");
+            if (playerReadyNotifierObject != null)
+            {
+                Debug.Log("Sending player ready notification!");
+                var playerReadyNotifier = playerReadyNotifierObject.GetComponent<PlayerReadyNotifier>();
+                playerReadyNotifier.CmdPlayersReady();
+                hasNotifiedServer = true;
+            }
+        }
+
         // Useful for testing multiplayer without multiple players
         if (Random.value < 0.003 && isLocalPlayer)
         {

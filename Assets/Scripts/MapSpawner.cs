@@ -11,6 +11,18 @@ public class MapSpawner : NetworkBehaviour {
 
     private bool hasBuiltWorld = false;
 
+    // Note: This isn't really the domain of the map spawner
+    private int playerCheckinCounter = 0;
+
+    public void PlayerCheckin()
+    {
+        playerCheckinCounter++;
+        if (playerCheckinCounter == 2)
+        {
+            BuildWorld();
+        }
+    }
+
     // Returns a value between -1 and 1, peaking at 0.
     private float triangleDistribution()
     {
