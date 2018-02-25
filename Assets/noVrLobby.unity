@@ -282,6 +282,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCanvas: {fileID: 63694799}
   matchCanvas: {fileID: 987796159}
+  readyButtonText: {fileID: 1787569928}
   networkManager: {fileID: 565689825}
 --- !u!4 &26417771
 Transform:

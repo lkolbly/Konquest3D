@@ -41,6 +41,11 @@ public class MapSpawner : NetworkBehaviour {
         return new string('0', length - s.Length) + s;
     }
 
+    private bool isNetworkGame()
+    {
+        return GameObject.Find("NetworkLobby") != null;
+    }
+
     // Use this for initialization
     public void BuildWorld() {
         // Instantiate a bunch of planets
@@ -48,7 +53,8 @@ public class MapSpawner : NetworkBehaviour {
         {
             var planetObject = Instantiate(planetPrefab, Random.insideUnitSphere + transform.position, Quaternion.identity);
             var graphicId = (int)(Random.value * 64);
-            if (!isClient && !isServer)
+            //if (!isClient && !isServer)
+            if (!isNetworkGame())
             {
                 var prefab = Resources.Load("generated/planet" + PadNumber(graphicId, 3), typeof(GameObject)) as GameObject;
                 var planetGraphics = Instantiate(prefab, planetObject.transform.position, Quaternion.identity);
@@ -77,7 +83,7 @@ public class MapSpawner : NetworkBehaviour {
 
             planet.playerObject = playerObject;
 
-            if (isServer)
+            if (isNetworkGame() && isServer)
             {
                 NetworkServer.Spawn(planetObject);
                 planet.RpcSetGraphics(graphicId);
@@ -87,8 +93,8 @@ public class MapSpawner : NetworkBehaviour {
 
     private void Start()
     {
-        var networkGame = isClient || isServer;
-        if (!networkGame)
+        //var networkGame = isClient || isServer;
+        if (!isNetworkGame())
         {
             BuildWorld();
         }

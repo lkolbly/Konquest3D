@@ -23,17 +23,34 @@ public class Ship : NetworkBehaviour {
     void Start () {
     }
 
+    private bool isNetworkGame()
+    {
+        return GameObject.Find("NetworkLobby") != null;
+    }
+
     [Command]
     void CmdInvade(GameObject target)
     {
         target.GetComponent<Planet>().DoInvasion(teamId, numShips, effectiveness);
     }
 
+    private void InvadeDispatch(GameObject target)
+    {
+        if (isNetworkGame())
+        {
+            CmdInvade(target);
+        }
+        else
+        {
+            target.GetComponent<Planet>().DoInvasion(teamId, numShips, effectiveness);
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log("Ship hit planet: "+isClient+" "+isServer);
         // We only get called on the server, or in singleplayer
-        if (!hasAuthority)
+        if (!isNetworkGame() && !hasAuthority)
         {
             return;
         }
@@ -46,7 +63,7 @@ public class Ship : NetworkBehaviour {
         var otherPlanet = other.gameObject.GetComponent<Planet>();
         if (otherPlanet != null)
         {
-            CmdInvade(other.gameObject);
+            InvadeDispatch(other.gameObject);
 
             Destroy(line);
             Destroy(gameObject);

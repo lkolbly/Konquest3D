@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 public class LobbyUiManager : MonoBehaviour {
 
     public Canvas mainCanvas;
     public Canvas matchCanvas;
+    public GameObject readyButtonText;
     public MyNetworkManager networkManager;
 
 	// Use this for initialization
@@ -38,10 +40,12 @@ public class LobbyUiManager : MonoBehaviour {
         if (networkPlayer.readyToBegin)
         {
             networkPlayer.SendNotReadyToBeginMessage();
+            readyButtonText.GetComponent<Text>().text = "Ready";
         }
         else
         {
             networkPlayer.SendReadyToBeginMessage();
+            readyButtonText.GetComponent<Text>().text = "Unready";
         }
     }
 
