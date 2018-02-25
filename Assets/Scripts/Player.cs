@@ -49,7 +49,7 @@ public class Player : NetworkBehaviour {
     public void setTarget(GameObject targetPlanet)
     {
         // Create some ships at the source planet headed to the target planet
-        sourcePlanet.GetComponent<Planet>().LaunchFleetDispatch(targetPlanet, selectedFleetSize);
+        LaunchFleetDispatch(sourcePlanet, targetPlanet, selectedFleetSize);
         selectedFleetSize = 1;
 
         // Unselect the source planet
@@ -80,35 +80,53 @@ public class Player : NetworkBehaviour {
         
     }
 
-    /*[Command]
+    [Command]
     public void CmdPlayersReady()
     {
         var mapSpawner = GameObject.Find("GameManager").GetComponent<MapSpawner>();
         mapSpawner.PlayerCheckin();
-    }*/
+    }
+
+    [Command]
+    public void CmdPlayerLaunchFleet(GameObject source, GameObject target, int fleetSize)
+    {
+        source.GetComponent<Planet>().LaunchFleetDispatch(target, fleetSize);
+    }
+
+    private void LaunchFleetDispatch(GameObject source, GameObject target, int fleetSize)
+    {
+        if (isClient)
+        {
+            CmdPlayerLaunchFleet(source, target, fleetSize);
+        }
+        else
+        {
+            source.GetComponent<Planet>().LaunchFleetDispatch(target, fleetSize);
+        }
+    }
 
     // Update is called once per frame
     void Update() {
-        if (!hasAuthority)
+        if (!isClient || !hasAuthority)
         {
             return;
         }
 
         if (!hasNotifiedServer)
         {
-            /*Debug.Log("Sending player ready notification!");
+            Debug.Log("Sending player ready notification!");
             //var playerReadyNotifier = gameObject.GetComponent<PlayerReadyNotifier>();
             //playerReadyNotifier.CmdPlayersReady();
             CmdPlayersReady();
-            hasNotifiedServer = true;*/
-            var playerReadyNotifierObject = GameObject.Find("PlayerReadyNotifier");
+            hasNotifiedServer = true;
+            /*var playerReadyNotifierObject = GameObject.Find("PlayerReadyNotifier");
             if (playerReadyNotifierObject != null)
             {
                 Debug.Log("Sending player ready notification!");
                 var playerReadyNotifier = playerReadyNotifierObject.GetComponent<PlayerReadyNotifier>();
                 playerReadyNotifier.CmdPlayersReady();
                 hasNotifiedServer = true;
-            }
+            }*/
         }
 
         // Useful for testing multiplayer without multiple players
@@ -143,7 +161,8 @@ public class Player : NetworkBehaviour {
                 }
             }
 
-            ourPlanets[0].GetComponent<Planet>().LaunchFleetDispatch(neutralPlanets[0], 1);
+            LaunchFleetDispatch(ourPlanets[0], neutralPlanets[0], 1);
+            //ourPlanets[0].GetComponent<Planet>().LaunchFleetDispatch(neutralPlanets[0], 1);
         }
     }
 }

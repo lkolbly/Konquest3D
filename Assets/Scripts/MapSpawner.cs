@@ -17,6 +17,7 @@ public class MapSpawner : NetworkBehaviour {
     public void PlayerCheckin()
     {
         playerCheckinCounter++;
+        Debug.Log("Player checked in, " + playerCheckinCounter + " checkins");
         if (playerCheckinCounter == 2)
         {
             BuildWorld();
@@ -110,7 +111,8 @@ public class MapSpawner : NetworkBehaviour {
 
     private void Start()
     {
-        var networkGame = !isClient && !isServer;
+        var networkGame = isClient || isServer;
+        //Debug.Log(isClient+" "+isServer);
         if (!networkGame)
         {
             BuildWorld();

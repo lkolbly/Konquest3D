@@ -81,11 +81,13 @@ public class Planet : NetworkBehaviour
 
     void OnChangeNumberOfShips(int nships)
     {
+        numberOfShips = nships;
         UpdateTooltip();
     }
 
-    void OnSetTeamId(int teamId)
+    void OnSetTeamId(int newTeamId)
     {
+        teamId = newTeamId;
         UpdateTooltip();
         DisplayTeamColor();
     }
@@ -114,7 +116,7 @@ public class Planet : NetworkBehaviour
 
     public void LaunchFleetDispatch(GameObject target, int numShips)
     {
-        if (Network.isClient)
+        if (isClient)
         {
             CmdLaunchFleet(target, numShips);
         }
@@ -146,9 +148,20 @@ public class Planet : NetworkBehaviour
 
         if (isServer) // @TODO: Should this be in CmdLaunchFleet?
         {
+            // Go get the player object of the owner
+            GameObject player = null;
+            foreach (var go in GameObject.FindObjectsOfType<GameObject>())
+            {
+                if (go.GetComponent<Player>() != null && go.GetComponent<Player>().teamId == teamId)
+                {
+                    player = go;
+                    break;
+                }
+            }
+            
             // Update the network about the new ship
-            NetworkServer.Spawn(shipObj);
-            NetworkServer.Spawn(lineObject);
+            NetworkServer.SpawnWithClientAuthority(shipObj, player);
+            NetworkServer.SpawnWithClientAuthority(lineObject, player);
         }
     }
 

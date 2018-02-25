@@ -30,10 +30,17 @@ public class Ship : NetworkBehaviour {
         Destroy(gameObject);
     }
 
+    [Command]
+    void CmdInvade(GameObject target)
+    {
+        target.GetComponent<Planet>().DoInvasion(teamId, numShips, effectiveness);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("Ship hit planet: "+isClient+" "+isServer);
         // We only get called on the server, or in singleplayer
-        if (Network.isClient)
+        if (!hasAuthority)
         {
             return;
         }
@@ -46,17 +53,18 @@ public class Ship : NetworkBehaviour {
         var otherPlanet = other.gameObject.GetComponent<Planet>();
         if (otherPlanet != null)
         {
-            otherPlanet.DoInvasion(teamId, numShips, effectiveness);
+            //otherPlanet.DoInvasion(teamId, numShips, effectiveness);
+            CmdInvade(other.gameObject);
 
             // Destroy on the server
             Destroy(line);
             Destroy(gameObject);
 
-            if (Network.isServer)
+            /*if (isServer)
             {
                 // Destroy on the clients
                 RpcDestroyShip();
-            }
+            }*/
         }
     }
 
