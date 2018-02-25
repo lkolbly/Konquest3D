@@ -18,7 +18,7 @@ public class MyNetworkManager : NetworkLobbyManager {
         Debug.Log("Server adding player "+playerCount+" "+playerControllerId);
         var player = Instantiate(gamePlayerPrefab, Vector3.zero, Quaternion.identity);
         player.GetComponent<Player>().teamId = ++playerCount;
-        NetworkServer.AddPlayerForConnection(conn, player, (short)(playerCount-1));//playerControllerId);
+        NetworkServer.AddPlayerForConnection(conn, player, (short)(playerCount-1));
         return player;
     }
 

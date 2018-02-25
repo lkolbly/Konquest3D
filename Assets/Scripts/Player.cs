@@ -16,8 +16,10 @@ public class Player : NetworkBehaviour {
 
     private bool hasNotifiedServer = false;
 
-    void OnSetTeamId(int teamId)
+    void OnSetTeamId(int newTeamId)
     {
+        teamId = newTeamId;
+        
         // Go re-render all planets
         foreach (var planet in GameObject.FindObjectsOfType<Planet>())
         {
@@ -61,11 +63,7 @@ public class Player : NetworkBehaviour {
     {
         Debug.Log("OnStartLocalPlayer() called");
 
-        // Tell the server we're ready
         var networkManager = GameObject.Find("NetworkLobby").GetComponent<MyNetworkManager>();
-        //var mapSpawner = GameObject.Find("GameManager").GetComponent<MapSpawner>();
-        //mapSpawner.CmdPlayersReady();
-
         networkManager.localPlayerObject = gameObject;
 
         // Go re-render all planets
@@ -81,7 +79,7 @@ public class Player : NetworkBehaviour {
     }
 
     [Command]
-    public void CmdPlayersReady()
+    public void CmdNotifyServerReady()
     {
         var mapSpawner = GameObject.Find("GameManager").GetComponent<MapSpawner>();
         mapSpawner.PlayerCheckin();
@@ -115,18 +113,8 @@ public class Player : NetworkBehaviour {
         if (!hasNotifiedServer)
         {
             Debug.Log("Sending player ready notification!");
-            //var playerReadyNotifier = gameObject.GetComponent<PlayerReadyNotifier>();
-            //playerReadyNotifier.CmdPlayersReady();
-            CmdPlayersReady();
+            CmdNotifyServerReady();
             hasNotifiedServer = true;
-            /*var playerReadyNotifierObject = GameObject.Find("PlayerReadyNotifier");
-            if (playerReadyNotifierObject != null)
-            {
-                Debug.Log("Sending player ready notification!");
-                var playerReadyNotifier = playerReadyNotifierObject.GetComponent<PlayerReadyNotifier>();
-                playerReadyNotifier.CmdPlayersReady();
-                hasNotifiedServer = true;
-            }*/
         }
 
         // Useful for testing multiplayer without multiple players
@@ -162,7 +150,6 @@ public class Player : NetworkBehaviour {
             }
 
             LaunchFleetDispatch(ourPlanets[0], neutralPlanets[0], 1);
-            //ourPlanets[0].GetComponent<Planet>().LaunchFleetDispatch(neutralPlanets[0], 1);
         }
     }
 }

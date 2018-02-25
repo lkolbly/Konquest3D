@@ -6,10 +6,7 @@ using UnityEngine.Networking;
 public class MapSpawner : NetworkBehaviour {
 
     public GameObject planetPrefab;
-    //public GameObject desertGeneratorPrefab;
     public GameObject playerObject;
-
-    private bool hasBuiltWorld = false;
 
     // Note: This isn't really the domain of the map spawner
     private int playerCheckinCounter = 0;
@@ -47,21 +44,11 @@ public class MapSpawner : NetworkBehaviour {
     // Use this for initialization
     public void BuildWorld() {
         // Instantiate a bunch of planets
-        //GameObject.Find("NetworkLobby").GetComponent<MyNetworkManager>();
-        Debug.Log(isClient + " " + isServer);
-        var networkGame = !isClient && !isServer;
-        // If we're a server or a singleplayer game, generate planets
-        if (networkGame && isClient)
-        {
-            return;
-        }
         for (var i = 0; i < 10; ++i)
         {
             var planetObject = Instantiate(planetPrefab, Random.insideUnitSphere + transform.position, Quaternion.identity);
-            //var generatorObject = Instantiate(desertGeneratorPrefab, Vector3.zero, Quaternion.identity);
-            //generatorObject.transform.parent = planetObject.transform;
             var graphicId = (int)(Random.value * 64);
-            if (!networkGame)
+            if (!isClient && !isServer)
             {
                 var prefab = Resources.Load("generated/planet" + PadNumber(graphicId, 3), typeof(GameObject)) as GameObject;
                 var planetGraphics = Instantiate(prefab, planetObject.transform.position, Quaternion.identity);
@@ -90,29 +77,17 @@ public class MapSpawner : NetworkBehaviour {
 
             planet.playerObject = playerObject;
 
-            //var planetGenerator = planetObject.GetComponent<GeneratePlanet>();
-
-            //planetGenerator.material = planet.GetComponent<Renderer>().materials[0];
-
             if (isServer)
             {
                 NetworkServer.Spawn(planetObject);
                 planet.RpcSetGraphics(graphicId);
-                //NetworkServer.Spawn(planetGraphics);
             }
         }
     }
 
-    /*[Command]
-    public void CmdPlayersReady()
-    {
-        BuildWorld();
-    }*/
-
     private void Start()
     {
         var networkGame = isClient || isServer;
-        //Debug.Log(isClient+" "+isServer);
         if (!networkGame)
         {
             BuildWorld();
@@ -121,10 +96,5 @@ public class MapSpawner : NetworkBehaviour {
 
     // Update is called once per frame
     void Update () {
-        /*if (!hasBuiltWorld)
-        {
-            BuildWorld();
-            hasBuiltWorld = true;
-        }*/
     }
 }

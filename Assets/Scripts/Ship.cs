@@ -23,13 +23,6 @@ public class Ship : NetworkBehaviour {
     void Start () {
     }
 
-    [ClientRpc]
-    void RpcDestroyShip()
-    {
-        Destroy(line);
-        Destroy(gameObject);
-    }
-
     [Command]
     void CmdInvade(GameObject target)
     {
@@ -53,18 +46,10 @@ public class Ship : NetworkBehaviour {
         var otherPlanet = other.gameObject.GetComponent<Planet>();
         if (otherPlanet != null)
         {
-            //otherPlanet.DoInvasion(teamId, numShips, effectiveness);
             CmdInvade(other.gameObject);
 
-            // Destroy on the server
             Destroy(line);
             Destroy(gameObject);
-
-            /*if (isServer)
-            {
-                // Destroy on the clients
-                RpcDestroyShip();
-            }*/
         }
     }
 

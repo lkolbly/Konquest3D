@@ -14,7 +14,7 @@ public class TooltipShowOnTouch : MonoBehaviour {
 
     private void setRendererEnabled(bool enabled)
     {
-        gameObject.SetActiveRecursively(enabled);
+        gameObject.SetActive(enabled);
     }
 
     private void DoTouched(object sender, InteractableObjectEventArgs e)
