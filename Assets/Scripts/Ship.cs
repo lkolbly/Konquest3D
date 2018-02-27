@@ -50,7 +50,7 @@ public class Ship : NetworkBehaviour {
     {
         Debug.Log("Ship hit planet: "+isClient+" "+isServer);
         // We only get called on the server, or in singleplayer
-        if (!isNetworkGame() && !hasAuthority)
+        if (isNetworkGame() && !hasAuthority)
         {
             return;
         }
