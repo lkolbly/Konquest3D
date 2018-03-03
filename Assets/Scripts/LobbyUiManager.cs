@@ -11,6 +11,7 @@ public class LobbyUiManager : MonoBehaviour {
     public Canvas matchCanvas;
     public GameObject readyButtonText;
     public MyNetworkManager networkManager;
+    public InputField input;
 
 	// Use this for initialization
 	void Start () {
@@ -26,7 +27,7 @@ public class LobbyUiManager : MonoBehaviour {
 
     public void OnConnectToServerClicked()
     {
-        networkManager.networkAddress = "localhost";
+        networkManager.networkAddress = input.text;
         networkManager.networkPort = 3058;
         networkManager.StartClient();
 

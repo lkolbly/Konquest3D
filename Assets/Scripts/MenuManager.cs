@@ -10,11 +10,17 @@ public class MenuManager : MonoBehaviour {
 		
 	}
 
-    public void OnClick()
+    /*public void OnClick()
     {
         //var scene = SceneManager.GetSceneByName("konquest3d");
         var sceneIndex = SceneUtility.GetBuildIndexByScenePath("Assets/konquest3d.scene");
         SceneManager.LoadScene(sceneIndex); //scene.buildIndex);
+    }*/
+
+    public void GoToScene(string scenePath)
+    {
+        var sceneIndex = SceneUtility.GetBuildIndexByScenePath(scenePath);
+        SceneManager.LoadScene(sceneIndex);
     }
 
     // Update is called once per frame

@@ -40,6 +40,8 @@ public class Planet : NetworkBehaviour
         GetComponent<VRTK_InteractableObject>().InteractableObjectUntouched += new InteractableObjectEventHandler(StopTouching);
 
         constructionCooldown = constructionTime;
+
+        UpdateTooltip();
     }
 
     public void DisplayTeamColor()

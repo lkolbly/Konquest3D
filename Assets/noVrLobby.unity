@@ -284,6 +284,7 @@ MonoBehaviour:
   matchCanvas: {fileID: 987796159}
   readyButtonText: {fileID: 1787569928}
   networkManager: {fileID: 565689825}
+  input: {fileID: 1543737501}
 --- !u!4 &26417771
 Transform:
   m_ObjectHideFlags: 0

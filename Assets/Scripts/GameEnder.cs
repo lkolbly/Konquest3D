@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameEnder : MonoBehaviour {
 
@@ -44,6 +45,10 @@ public class GameEnder : MonoBehaviour {
         if (winningTeam != -1)
         {
             Debug.Log("Winning team is " + winningTeam);
+
+            // Head back to the main menu...
+            var sceneIndex = SceneUtility.GetBuildIndexByScenePath("Assets/mainMenu.unity");
+            SceneManager.LoadScene(sceneIndex);
         }
     }
 }
