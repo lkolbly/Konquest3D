@@ -18,6 +18,12 @@ public class LobbyUiManager : MonoBehaviour {
         matchCanvas.gameObject.SetActive(false);
 	}
 
+    public void OnReturnToMenuClicked()
+    {
+        var sceneIndex = SceneUtility.GetBuildIndexByScenePath("Assets/mainMenu.unity");
+        SceneManager.LoadScene(sceneIndex);
+    }
+
     public void OnStartServerClicked()
     {
         networkManager.StartHost();
